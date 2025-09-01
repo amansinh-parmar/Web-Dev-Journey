@@ -30,7 +30,7 @@ app.get("/cars", (req, res) => {
 });
 
 app.get("/error", (req, res) => {
-  carCollection.car();
+  Home.collection();
 });
 
 // ================ password verification ================
@@ -51,6 +51,10 @@ app.get("/secret", verifyPassword, (req, res, next) => {
   next();
 });
 
+app.get("/admin", (req, res) => {
+  throw new AppError("You are not an Admin!", 403);
+});
+
 // ================ for '404' error ================
 app.use((req, res) => {
   res.status(404).send("NOT FOUND!");
@@ -59,14 +63,17 @@ app.use((req, res) => {
 // ================ error handling using 'MiddleWare' ================
 app.use((err, req, res, next) => {
   //   res.status(500).send("THIS IS 500 ERROR!");
-  //   console.log(err);
+  console.log(err);
 
   //   next(); // It will get next() code
   next(err); // It will get next(err) 'error middleware'
 });
 
+app.use((err, req, res, next) => {
+  const { status = 500, message = "SOMETHING WENT WRONG!!" } = err;
+  res.status(status).send(message);
+});
 // ================ listening port ================
 app.listen(8080, () => {
   console.log("SERVER LOGIN PORT:8080");
 });
-        
