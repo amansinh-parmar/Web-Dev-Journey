@@ -1,22 +1,14 @@
 const mongoose = require("mongoose");
+const { Schema } = mongoose;
 
-const productSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    require: true,
-  },
-  price: {
-    type: Number,
-    require: true,
-    min: 0,
-  },
-  category: {
-    type: String,
-    lowercase: true,
-    enum: ["clothes", "watch", "shoes", "accessories", "jacket"],
-  },
+const BucketList = new Schema({
+  place: String,
+  date: Number,
+  target: String,
 });
 
-const Product = mongoose.model("Product", productSchema);
+// =============== Complie Model ===============
+const Task = mongoose.model("Task", BucketList);
 
-module.exports = Product;
+// =============== Export the file ===============
+module.exports = Task;
