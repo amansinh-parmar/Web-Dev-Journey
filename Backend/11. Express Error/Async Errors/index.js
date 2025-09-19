@@ -1,19 +1,19 @@
+// ================== Import Modules ==================
 const express = require("express");
 const app = express();
 const path = require("path");
 const mongoose = require("mongoose");
 const methodOverride = require("method-override");
 const AppError = require("./AppError");
-
 const Product = require("./product");
 
+// ================== Connect Mongoose ==================
 mongoose
   .connect("mongodb://127.0.0.1:27017/UnisexStore", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  // ============== To check wather it get an error ==================
-
+// To check wather it get an error
   .then(() => {
     console.log("MONGO CONNECTION OPEN!!");
   })
@@ -22,14 +22,23 @@ mongoose
     console.log(err);
   });
 
+// ================== Middleware ==================
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
+
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 
 const categories = ["clothes", "watch", "shoes", "accessories", "jacket"];
 
-// ========== "aysnc call back" for 'routes' and "await" 'Mongoose operation' ==========
+
+// ================== Home Page ==================
+app.get("/", (req, res) => {
+  res.render("home");
+});
+
+// ================== View Bucket List ==================
+// "aysnc call back" for 'routes' and "await" 'Mongoose operation'
 app.get("/product", async (req, res) => {
   const { category } = req.query;
   if (category) {
@@ -41,12 +50,13 @@ app.get("/product", async (req, res) => {
   }
 });
 
-// ================== add new product ==================
+// ================== Add New Product Form ==================
 app.get("/product/new", (req, res) => {
   throw new AppError("NOT ALLOWED", 401);
   res.render("new", { categories });
 });
 
+// ================== Create Product ==================
 // After adding new product post request via "_id"
 app.post("/product", async (req, res) => {
   const newProduct = new Product(req.body);
@@ -54,6 +64,7 @@ app.post("/product", async (req, res) => {
   res.redirect(`/product/${newProduct._id}`);
 });
 
+// ================== View Product Details ==================
 // Get particular product page via "_id"
 app.get("/product/:id", async (req, res) => {
   const { id } = req.params;
@@ -62,6 +73,7 @@ app.get("/product/:id", async (req, res) => {
   res.render("show", { product });
 });
 
+// ================== Edit Product Form ==================
 // Edit particular product page via "_id"
 app.get("/product/:id/edit", async (req, res) => {
   const { id } = req.params;
@@ -69,6 +81,7 @@ app.get("/product/:id/edit", async (req, res) => {
   res.render("edit", { product, categories });
 });
 
+// ================== Update Product ==================
 // Update particular product via "_id"
 app.put("/product/:id", async (req, res) => {
   const { id } = req.params;
@@ -79,6 +92,7 @@ app.put("/product/:id", async (req, res) => {
   res.redirect(`/product/${product._id}`);
 });
 
+// ================== Delete Product ==================
 // Delete particular product via "_id"
 app.delete("/product/:id", async (req, res) => {
   const { id } = req.params;
@@ -86,12 +100,13 @@ app.delete("/product/:id", async (req, res) => {
   res.redirect("/product");
 });
 
+// ================== Global Error Handler ================== 
 app.use((err, req, res, next) => {
   const { status = 500, message = "Something went wrong" } = err;
   res.status(status).send(message);
 });
 
-// ================== Listen Port ==================
+// ================== Start Server ==================
 app.listen(3000, () => {
   console.log("Express Listening Port:3000");
 });

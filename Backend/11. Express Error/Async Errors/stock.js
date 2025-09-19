@@ -40,7 +40,6 @@ p.save()
 - don’t need to use .save() even for single inserts if using create() or insertOne() — they also save automatically.
 
 .save() is only required if manually creating a new instance like const p = new Product(...).
-
 */
 
 const stockProduct = [
