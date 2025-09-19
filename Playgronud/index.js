@@ -55,7 +55,7 @@ app.get("/task/new", (req, res) => {
 
 // ================== Create Task ==================
 app.post("/task", async (req, res) => {
-   console.log("Incoming form data:", req.body);  // DEBUG LOG
+  console.log("Incoming form data:", req.body); // DEBUG LOG
 
   try {
     const newTask = new Task(req.body);
@@ -65,7 +65,6 @@ app.post("/task", async (req, res) => {
     console.error("MongoDB Error:", err);
     res.status(400).send("Task creation failed: " + err.message);
   }
-
 });
 
 // ================== View Task Details ==================
@@ -114,14 +113,13 @@ app.delete("/task/:id", async (req, res) => {
     res.status(500).send("Failed to delete task.");
   }
 });
-// ================== Delete Item ==================
 
-// ================== Error Check ==================
-// app.use((req, res, err, next) => {
-//   const { status = 500, message = "Something went wrong" } = err;
-//   res.status(status).send(message);
-//   next();
-// });
+// ================== Global Error Handler ==================
+app.use((req, res, err, next) => {
+  const { status = 500, message = "Something went wrong" } = err;
+  res.status(status).send(message);
+  next();
+});
 
 // ================== Listen Port ==================
 app.listen(8080, () => {
