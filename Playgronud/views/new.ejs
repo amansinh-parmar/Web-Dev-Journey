@@ -4,17 +4,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New Product</title>
+    <title>New Task</title>
 </head>
 
 <body>
-    <h1>Add Product</h1>
-    <form action="/product" method="post">
-        <label for="name">Product Name</label>
-        <input type="text" name="name" placeholder="product name">
-        <label for="price">Price</label>
-        <input type="number" name="price" placeholder="product price">
-        <label for="category">Select Category</label>
+    <h1>Add Task</h1>
+    <form action="/task" method="post">
+        <label for="name">Task Name:</label>
+        <input type="text" name="name" required>
+
+        <label for=" targetDate">Task Archive Date:</label>
+        <input type="date" name="targetDate" required>
+
+        <label for="category">Task Category:</label>
         <select name="category">
             <% for(let category of categories){ %>
                 <option value="<%= category %>">
@@ -24,6 +26,9 @@
         </select>
         <button>Submit</button>
     </form>
+
+    <a href="/task">
+        << All Tasks</a>
 
 </body>
 

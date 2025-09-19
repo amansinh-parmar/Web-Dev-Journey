@@ -4,28 +4,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>All Products</title>
+    <title>All Tasks</title>
+    <style>
+        ul li a {
+            /* list-style: none; */
+            color: #000;
+            font-size: 1.2rem;
+            text-decoration: none;
+        }
+    </style>
 </head>
 
 <body>
 
     <h1>
-        <%= category %> Product
+        <%= category %> Task
     </h1>
     <ul>
-        <% for(let product of products){ %>
+        <% for(let task of tasks){ %>
             <li>
-                <a href="/task/<%= product._id %>">
-                    <%= product.name %>
+                <a href="/task/<%= task._id %>">
+                    <%= task.name %>
                 </a>
             </li>
             <% } %>
     </ul>
 
-    <h4>Add a New Product</h4>
-    <a href="/product/new"><button>Add Product</button></a>
+    <!-- <h4>Add a New Task</h4> -->
+    <a href="/task/new"><button>Add Task</button></a>
     <% if(category !=='All' ){ %>
-        <a href="/product">All Product</a>
+        <a href="/task">All Product</a>
         <% } %>
 </body>
 

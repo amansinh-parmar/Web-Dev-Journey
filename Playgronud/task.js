@@ -2,9 +2,19 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const BucketList = new Schema({
-  place: String,
-  date: Number,
-  target: String,
+  name: {
+    type: String,
+    required: true,
+  },
+  targetDate: {
+    type: Date,
+    required: true,
+  },
+  category: {
+    type: String,
+    enum: ["Habits", "Strength", "Exercise", "Travel Place"],
+    required: true,
+  },
 });
 
 // =============== Complie Model ===============

@@ -5,29 +5,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>
-        <%= product.name %>
+        <%= task.name %>
     </title>
+
 </head>
 
 <body>
     <h1>
-        <%= product.name %>
+        <%= task.name %>
     </h1>
     <ul>
-        <li>Price - $<%= product.price %>
+        <li>
+            <strong>Category:</strong>
+            <a href="/task?category=<%= task.category %>"></a>
+            <%= task.category %>
         </li>
-        <li>Category - <a href="/product?category=<%= product.category %>">
-                <%= product.category %>
-            </a>
+        <li>
+            <strong>Target Date:</strong>
+            <%= task.targetDate.toDateString() %>
         </li>
+
+        <% const today=new Date(); const target=new Date(task.targetDate); const msPerDay=1000 * 60 * 60 * 24; const
+            diffInDays=Math.ceil((target - today) / msPerDay); %>
+
+            <li>
+                <strong>Days Left:</strong>
+                <% if(diffInDays>= 0){ %>
+                    <%= diffInDays %> days left
+                        <% } else {%>
+                            Target date passed (<%= -diffInDays %> days ago)
+                                <% } %>
+            </li>
     </ul>
-    <a href="/product">All Products</a>
-    <a href="/product/<%= product._id %>/edit">Edit Products</a>
 
-    <form action="/product/<%= product._id %>?_method=DELETE" method="post">
-        <button>Delete</button>
+    <div style="margin-top: 20px;">
+        <a href="/task"><button>← All Tasks</button></a> |
+        <a href="/task/<%= task._id %>/edit"><button>✏️ Edit Task</button></a>
+    </div>
+    <form action="/task/<%= task._id %>?_method=DELETE" method="POST" style="margin-top: 10px;">
+        <button onclick="return confirm('Are you sure you want to delete this task?')">
+            🗑️ Delete Task
+        </button>
     </form>
-
 </body>
 
 </html>
