@@ -1,6 +1,7 @@
+// =============== Import Mongoose ===============
 const mongoose = require("mongoose");
 
-// =============== Make Schema ===============
+// =============== Create New Schema ===============
 const productSchema = new mongoose.Schema({
   name: {
     type: String,
