@@ -1,3 +1,4 @@
+// ================== Import Modules ==================
 const express = require("express");
 const app = express();
 const path = require("path");
@@ -6,12 +7,9 @@ const Product = require("./product");
 const methodOverride = require("method-override");
 const AppError = require("./AppError");
 
+// ================== Mongoose Connection ==================
 mongoose
-  .connect("mongodb://127.0.0.1:27017/UnisexStore", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-
+  .connect("mongodb://127.0.0.1:27017/UnisexStore")
   .then(() => {
     console.log("MONGO CONNECTION OPEN");
   })
@@ -20,6 +18,7 @@ mongoose
     console.log(err);
   });
 
+// ================== Middleware ==================
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
@@ -28,12 +27,13 @@ app.use(methodOverride("_method"));
 
 const categories = ["clothes", "watch", "shoes", "accessories", "jacket"];
 
-// For Home Page
+// ================== Routes ==================
+// -->> Home Page
 app.get("/", (req, res) => {
   res.render("home");
 });
 
-// For Product Page
+// -->> Product Page
 app.get("/product", async (req, res) => {
   const { category } = req.query;
   if (category) {
@@ -45,7 +45,7 @@ app.get("/product", async (req, res) => {
   }
 });
 
-// For New Product Page
+// -->> New Product Page
 app.get("/product/new", (req, res) => {
   throw new AppError("NOT ALLOWED", 401);
   res.render("new", { categories });
