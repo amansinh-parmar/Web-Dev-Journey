@@ -2,35 +2,39 @@
 const express = require("express");
 const app = express();
 const path = require("path");
-const mongoose = require("mongoose");
-const Product = require("./product");
 const methodOverride = require("method-override");
+const mongoose = require("mongoose");
+const Product = require("./task");
 const AppError = require("./AppError");
+const { profileEnd } = require("console");
 
-// ================== Mongoose Connection ==================
+// ================== Connect Mongoose ==================
 mongoose
   .connect("mongodb://127.0.0.1:27017/UnisexStore")
   .then(() => {
-    console.log("MONGO CONNECTION OPEN");
+    console.log("MONGODB CONNECTION OPEN");
   })
   .catch((err) => {
-    console.log("OHH NO THIS IS MONGO ERROR");
+    console.log("MONGODB CONNECTION ERROR");
     console.log(err);
   });
-
 // ================== Middleware ==================
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
 app.use(express.urlencoded({}));
-app.use(methodOverride("_method"));
+// app.use(methodOverride("_method"));
 
-const categories = ["clothes", "watch", "shoes", "accessories", "jacket"];
+const categories = ["Clothes", "Footware", "Accessories", "Watches"];
 
 // ================== Routes ==================
 // -->> Home Page
 app.get("/", (req, res) => {
   res.render("home");
+});
+
+app.get("/cars", (req, res) => {
+  res.render("secret");
 });
 
 // -->> Product Page
@@ -45,9 +49,9 @@ app.get("/product", async (req, res) => {
   }
 });
 
-// -->> New Product Page
+// -->> Add New Product
 app.get("/product/new", (req, res) => {
-  // throw new AppError("NOT ALLOWED", 401);
+  // throw new AppError("SEARCHING NOT ALLOWED..!!", 401);
   res.render("new", { categories });
 });
 
@@ -57,13 +61,21 @@ app.post("/product", async (req, res) => {
   res.redirect(`/product/${newProduct._id}`);
 });
 
-app.get("/product/:id/edit", async (req, res) => {
+// -->> View Product
+app.get("/product/:id", async (req, res) => {
   const { id } = req.params;
   const product = await Product.findById(id);
-  console.log(product);
   res.render("show", { product });
 });
 
+// -->> View Product
+app.get("/product/:id/edit", async (req, res) => {
+  const { id } = req.params;
+  const product = await Product.findById(id);
+  res.render("edit", { product, categories });
+});
+
+// -->> Update Product
 app.put("/product/:id", async (req, res) => {
   const { id } = req.params;
   const product = await Product.findByIdAndUpdate(id, req.body, {
@@ -73,17 +85,21 @@ app.put("/product/:id", async (req, res) => {
   res.redirect(`/product/${product._id}`);
 });
 
-// Delete particular product via "_id"
+// -->> Delete Product
 app.delete("/product/:id", async (req, res) => {
   const { id } = req.params;
   const deleteProduct = await Product.findByIdAndDelete(id);
+  // res.redirect(`/product/${deleteProduct._id}`);
   res.redirect("/product");
 });
 
-app.use((err, req, res, next) => {
-  const { status = 500, message = "Somethig went wrong" } = err;
-  res.status(status).send(message);
-});
+// ================== Global Error ==================
+// app.use((err, req, res, next) => {
+//   res.status(401).send("SEARCH RESULT NOT FOUND!!");
+//   next();
+// });
+
+// ================== Connect Mongoose ==================
 app.listen(8080, () => {
-  console.log("Sever Login Port:8080");
+  console.log("Express Server Port:8080");
 });

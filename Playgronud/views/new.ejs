@@ -9,6 +9,7 @@
 
 <body>
     <h1>Add Task</h1>
+    <!--     
     <form action="/task" method="post">
         <label for="name">Task Name:</label>
         <input type="text" name="name" required>
@@ -25,10 +26,27 @@
                 <% } %>
         </select>
         <button>Submit</button>
+    </form> -->
+
+
+    <form action="/product" method="post">
+        <label for="name">Product Name</label>
+        <input type="text" name="name" placeholder="product name">
+        <label for="price">Price</label>
+        <input type="number" name="price" placeholder="product price">
+        <label for="category">Select Category</label>
+        <select name="category">
+            <% for(let category of categories){ %>
+                <option value="<%= category %>">
+                    <%= category %>
+                </option>
+                <% } %>
+        </select>
+        <button>Submit</button>
     </form>
 
-    <a href="/task">
-        << All Tasks</a>
+    <a href="/product">
+        << All Product</a>
 
 </body>
 
