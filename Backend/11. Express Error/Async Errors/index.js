@@ -31,7 +31,7 @@ app.use(methodOverride("_method"));
 
 const categories = ["clothes", "watch", "shoes", "accessories", "jacket"];
 
-
+// ================== Routes ==================
 // ================== Home Page ==================
 app.get("/", (req, res) => {
   res.render("home");
