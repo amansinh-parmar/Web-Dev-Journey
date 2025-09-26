@@ -5,12 +5,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All Products</title>
+    <style>
+        li {
+            margin-bottom: 8px;
+            list-style: number;
+        }
+
+        a {
+            margin-left: 10px;
+            text-decoration: none;
+        }
+
+        form {
+            display: inline;
+        }
+    </style>
+
 </head>
 
 <body>
 
     <h1>
-        <%= category %> Product
+        <%= category.charAt(0).toUpperCase() + category.slice(1) %> Product
     </h1>
     <ul>
         <% for(let product of products){ %>
@@ -27,6 +43,8 @@
     <% if(category !=='All' ){ %>
         <a href="/product">All Product</a>
         <% } %>
+            <a href="/">Back to Home Page</a>
+
 </body>
 
 </html>

@@ -7,6 +7,22 @@
     <title>
         <%= product.name %>
     </title>
+
+    <style>
+        li {
+            margin-bottom: 8px;
+        }
+
+        a {
+            margin-left: 10px;
+            text-decoration: none;
+        }
+
+        form {
+            display: inline;
+        }
+    </style>
+
 </head>
 
 <body>
@@ -17,10 +33,12 @@
         <li>Price - $<%= product.price %>
         </li>
         <li>Category - <a href="/product?category=<%= product.category %>">
-                <%= product.category %>
+                <%= product.category.charAt(0).toUpperCase() + product.category.slice(1) %>
             </a>
         </li>
     </ul>
+
+
     <a href="/product">All Products</a>
     <a href="/product/<%= product._id %>/edit">Edit Products</a>
 

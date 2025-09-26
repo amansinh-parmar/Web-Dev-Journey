@@ -6,7 +6,6 @@ const methodOverride = require("method-override");
 const mongoose = require("mongoose");
 const Product = require("./task");
 const AppError = require("./AppError");
-const { profileEnd } = require("console");
 
 // ================== Connect Mongoose ==================
 mongoose
@@ -23,7 +22,7 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
 app.use(express.urlencoded({}));
-// app.use(methodOverride("_method"));
+app.use(methodOverride("_method"));
 
 const categories = ["Clothes", "Footware", "Accessories", "Watches"];
 
@@ -51,7 +50,7 @@ app.get("/product", async (req, res) => {
 
 // -->> Add New Product
 app.get("/product/new", (req, res) => {
-  // throw new AppError("SEARCHING NOT ALLOWED..!!", 401);
+  // throw new AppError("OOPS, BUCKET IS FULL NOT ALLOWED..!!", 401);
   res.render("new", { categories });
 });
 
@@ -94,10 +93,10 @@ app.delete("/product/:id", async (req, res) => {
 });
 
 // ================== Global Error ==================
-// app.use((err, req, res, next) => {
-//   res.status(401).send("SEARCH RESULT NOT FOUND!!");
-//   next();
-// });
+app.use((err, req, res, next) => {
+  res.status(401).send("SEARCH RESULT NOT FOUND!!");
+  next();
+});
 
 // ================== Connect Mongoose ==================
 app.listen(8080, () => {

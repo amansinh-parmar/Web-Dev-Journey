@@ -14,8 +14,8 @@ const productSchema = new mongoose.Schema({
   },
   category: {
     type: String,
-    lowercase: true,
-    enum: ["clothes", "watch", "shoes", "accessories", "jacket"],
+    // lowercase: true,
+    enum: ["Clothes", "Footwear", "Accessories", "Watches"],
   },
 });
 
