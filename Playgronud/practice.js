@@ -54,10 +54,14 @@ app.get("/product/new", (req, res) => {
   res.render("new", { categories });
 });
 
-app.post("/product", async (req, res) => {
-  const newProduct = new Product(req.body);
-  await newProduct.save();
-  res.redirect(`/product/${newProduct._id}`);
+app.post("/product", async (req, res, next) => {
+  try {
+    const newProduct = new Product(req.body);
+    await newProduct.save();
+    res.redirect(`/product/${newProduct._id}`);
+  } catch (e) {
+    next(e);
+  }
 });
 
 // -->> View Product
@@ -93,10 +97,10 @@ app.delete("/product/:id", async (req, res) => {
 });
 
 // ================== Global Error ==================
-app.use((err, req, res, next) => {
-  res.status(401).send("SEARCH RESULT NOT FOUND!!");
-  next();
-});
+// app.use((err, req, res, next) => {
+//   res.status(401).send("SEARCH RESULT NOT FOUND!!");
+//   next();
+// });
 
 // ================== Connect Mongoose ==================
 app.listen(8080, () => {
