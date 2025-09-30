@@ -36,8 +36,9 @@ app.get("/", (req, res) => {
 
 // ================== View Bucket List ==================
 // "aysnc call back" for 'routes' and "await" 'Mongoose operation'
-app.get("/product", async (req, res, next) => {
-  try {
+app.get(
+  "/product",
+  wrapAsync(async (req, res, next) => {
     const { category } = req.query;
     if (category) {
       const products = await Product.find({ category });
@@ -46,10 +47,8 @@ app.get("/product", async (req, res, next) => {
       const products = await Product.find({});
       res.render("index", { products, category: "All" });
     }
-  } catch (e) {
-    next(e);
-  }
-});
+  })
+);
 
 // ================== Add New Product Form ==================
 app.get("/product/new", (req, res) => {
@@ -59,87 +58,86 @@ app.get("/product/new", (req, res) => {
 
 // ================== Create Product ==================
 // After adding new product post request via "_id"
-app.post("/product", async (req, res, next) => {
-  try {
+app.post(
+  "/product",
+  wrapAsync(async (req, res, next) => {
     const newProduct = new Product(req.body);
     await newProduct.save();
     res.redirect(`/product/${newProduct._id}`);
-  } catch (e) {
-    next(e);
-  }
-});
+  })
+);
 
 // ================== View Product Details ==================
 // Get particular product page via "_id"
-app.get("/product/:id", async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    // for invalid id
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      throw new AppError("Invalid Product ID Format!", 400);
-    }
 
+function wrapAsync(fn) {
+  return function (req, res, next) {
+    fn(req, res, next).catch((e) => next(e));
+  };
+}
+app.get(
+  "/product/:id",
+  wrapAsync(async (req, res, next) => {
+    const { id } = req.params;
     const product = await Product.findById(id);
     if (!product) {
       throw new AppError("Product Not Found!!", 404);
     }
     res.render("show", { product });
-  } catch (e) {
-    next(e);
-  }
-});
+  })
+);
 
 // ================== Edit Product Form ==================
 // Edit particular product page via "_id"
-app.get("/product/:id/edit", async (req, res, next) => {
-  try {
+app.get(
+  "/product/:id/edit",
+  wrapAsync(async (req, res, next) => {
     const { id } = req.params;
-    // for invalid id
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      throw new AppError("Invalid Product ID Format!", 400);
-    }
-
     const product = await Product.findById(id);
     if (!product) {
       throw new AppError("Invalid Product Is Not Edit....!!", 404);
     }
     res.render("edit", { product, categories });
-  } catch (e) {
-    next(e);
-  }
-});
+  })
+);
 
 // ================== Update Product ==================
 // Update particular product via "_id"
-app.put("/product/:id", async (req, res, next) => {
-  const { id } = req.params;
-  try {
+app.put(
+  "/product/:id",
+  wrapAsync(async (req, res, next) => {
+    const { id } = req.params;
     const product = await Product.findByIdAndUpdate(id, req.body, {
       runValidators: true,
       new: true,
     });
     res.redirect(`/product/${product._id}`);
-  } catch (e) {
-    if (e.name === "ValidationError") {
-      // If validation fails, re-render the form with the error and previous input
-      return res.status(400).render("product/new", {
-        error: e.message,
-        product: req.body,
-      });
-    }
-    next(e);
-  }
-});
+  })
+);
 
 // ================== Delete Product ==================
 // Delete particular product via "_id"
-app.delete("/product/:id", async (req, res) => {
-  const { id } = req.params;
-  const deleteProduct = await Product.findByIdAndDelete(id);
-  res.redirect("/product");
-});
+app.delete(
+  "/product/:id",
+  wrapAsync(async (req, res) => {
+    const { id } = req.params;
+    const deleteProduct = await Product.findByIdAndDelete(id);
+    res.redirect("/product");
+  })
+);
+
 
 // ================== Global Error Handler ==================
+const handleValidationErr = err => {
+  console.dir (err);
+  return new AppError(`Validation Failed....${err.message}`, 400)
+}
+app.use((err, req, res, next) => {
+  console.log(err.name)
+  if(err.name === 'ValidationError') err = handleValidationErr(err)
+  next(err);
+});
+
 app.use((err, req, res, next) => {
   const { status = 500, message = "Something went wrong" } = err;
   res.status(status).send(message);
