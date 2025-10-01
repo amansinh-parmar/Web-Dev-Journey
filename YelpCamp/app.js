@@ -10,10 +10,7 @@ const Campground = require("./models/campground");
 const mongoose = require("mongoose");
 const campground = require("./models/campground");
 // mongodb://server port/'database name'
-mongoose.connect("mongodb://127.0.0.1:27017/yelp-camp", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+mongoose.connect("mongodb://127.0.0.1:27017/yelp-camp");
 
 // check there is an error or not
 const db = mongoose.connection;
@@ -71,7 +68,6 @@ app.put("/campground/:id", async (req, res) => {
   res.redirect(`/campground/${campground._id}`);
 });
 
-
 // =============== "delete campground" ===============
 app.delete("/campground/:id", async (req, res) => {
   const { id } = req.params;
@@ -89,6 +85,11 @@ app.get("/makecampground", async (req, res) => {
   res.send(camp);
 });
 */
+// =============== Global Error ===============
+app.use((err, req, res, next) => {
+  const { status = 500, message = "SOMETHINVG WENT WRONG" } = err;
+  res.status(status).send(message);
+});
 
 // =============== Listen Port ===============
 app.listen(3000, () => {

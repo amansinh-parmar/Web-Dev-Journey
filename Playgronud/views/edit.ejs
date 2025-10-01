@@ -16,12 +16,6 @@
         <input type="number" name="price" placeholder="product price" value="<%= product.price %>">
         <label for="category">Select Category</label>
         <select name="category">
-            <!-- ======== Ternary Operator ======== -->
-            <!-- <option value="clothes" <%=product.category==='clothes' ? 'selected' : '' %> >Clothes</option>
-            <option value="watch" <%=product.category==='watch' ? 'selected' : '' %> >Smart Watch</option>
-            <option value="accessories" <%=product.category==='accessories' ? 'selected' : '' %> >Accessories</option>
-            <option value="shoes" <%=product.category==='shoes' ? 'selected' : '' %> >Shoes</option> -->
-
             <% for(let category of categories){ %>
                 <option value="<%= category %>" <%=product.category===category ? 'selected' : '' %>>
                     <%= category %>

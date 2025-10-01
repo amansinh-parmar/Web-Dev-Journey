@@ -3,7 +3,7 @@ const express = require("express");
 const app = express();
 const path = require("path");
 const mongoose = require("mongoose");
-const Product = require("./product");
+const Product = require("./task");
 const methodOverride = require("method-override");
 const AppError = require("./AppError");
 
@@ -25,7 +25,7 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({}));
 app.use(methodOverride("_method"));
 
-const categories = ["clothes", "watch", "shoes", "accessories", "jacket"];
+const categories = ["Clothes", "Footwear", "Accessories", "Watches"];
 
 // ================== Routes ==================
 // -->> Home Page
@@ -51,20 +51,35 @@ app.get("/product/new", (req, res) => {
   res.render("new", { categories });
 });
 
+// -->> Create Product
 app.post("/product", async (req, res) => {
   const newProduct = new Product(req.body);
   await newProduct.save();
   res.redirect(`/product/${newProduct._id}`);
 });
 
-app.get("/product/:id/edit", async (req, res) => {
+// -->> View Product Details
+app.get("/product/:id", async (req, res, next) => {
   const { id } = req.params;
   const product = await Product.findById(id);
-  console.log(product);
+  if (!product) {
+    throw new AppError("PRODUCT NOT FOUND!!", 404);
+  }
   res.render("show", { product });
 });
 
-app.put("/product/:id", async (req, res) => {
+// -->> Edit Product Form
+app.get("/product/:id/edit", async (req, res) => {
+  const { id } = req.params;
+  const product = await Product.findById(id);
+  if (!product) {
+    throw new AppError("Invalid Product is not Edit..!!", 404);
+  }
+  res.render("edit", { product, categories });
+});
+
+// -->> Update Product
+app.put("/product/:id", async (req, res, next) => {
   const { id } = req.params;
   const product = await Product.findByIdAndUpdate(id, req.body, {
     runValidators: true,
@@ -80,10 +95,23 @@ app.delete("/product/:id", async (req, res) => {
   res.redirect("/product");
 });
 
+// ================== Global Error Handler ==================
+const handleValidationErr = (err) => {
+  console.dir(err);
+  return new AppError(`Validation Failed....${err.message}`);
+};
+app.use((err, req, res, next) => {
+  console.log(err.name);
+  if (err.name === "ValidationError") err = handleValidationErr(err);
+  next(err);
+});
+
 app.use((err, req, res, next) => {
   const { status = 500, message = "Somethig went wrong" } = err;
   res.status(status).send(message);
 });
+
+// ================== Start Server ==================
 app.listen(8080, () => {
   console.log("Sever Login Port:8080");
 });

@@ -126,15 +126,14 @@ app.delete(
   })
 );
 
-
 // ================== Global Error Handler ==================
-const handleValidationErr = err => {
-  console.dir (err);
-  return new AppError(`Validation Failed....${err.message}`, 400)
-}
+const handleValidationErr = (err) => {
+  console.dir(err);
+  return new AppError(`Validation Failed....${err.message}`);
+};
 app.use((err, req, res, next) => {
-  console.log(err.name)
-  if(err.name === 'ValidationError') err = handleValidationErr(err)
+  console.log(err.name);
+  if (err.name === "ValidationError") err = handleValidationErr(err);
   next(err);
 });
 
