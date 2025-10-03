@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-
+// ================= Connect with Mongoose =================
 mongoose
   .connect("mongodb://localhost:27017/relationshipDB")
   .then(() => {
@@ -9,24 +9,24 @@ mongoose
     console.log("OH NO, MONGO CONNECTION ERROR!!", err);
   });
 
-const addressSchema = new mongoose.Schema(
-  {
-    street: String,
-    city: String,
-    state: String,
-    country: String,
-  },
-  { _id: false }
-);
-
+// ================= Create new Schema =================
 const userSchema = new mongoose.Schema({
   first: String,
   last: String,
-  addresses: [addressSchema], // Use addressSchema here
+  addresses: [
+    {
+      _id: { _id: false },
+      street: String,
+      city: String,
+      state: String,
+      country: String,
+    },
+  ],
 });
-
+// Create a 'user' Model
 const User = mongoose.model("User", userSchema);
 
+// Add new User
 const makeUser = async () => {
   const u = new User({
     first: "Harry",
@@ -41,7 +41,9 @@ const makeUser = async () => {
   const res = await u.save();
   console.log(res);
 };
+// makeUser();
 
+// Add 'new address'
 const addAddress = async (id) => {
   const user = await User.findById(id);
   user.addresses.push({
@@ -50,10 +52,8 @@ const addAddress = async (id) => {
     state: "NY",
     country: "USA",
   });
-  const res = await user.save()
+  const res = await user.save();
   console.log(res);
 };
-
-addAddress('68dd7cb9295646117c71a42b')
-
-// makeUser();
+// make sure to add same and valid user _id:
+addAddress("68dd7cb9295646117c71a42b");
