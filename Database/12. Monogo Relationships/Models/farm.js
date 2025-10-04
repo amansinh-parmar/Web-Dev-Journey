@@ -61,5 +61,6 @@ const addProduct = async () => {
 // addProduct();
 
 Farm.findOne({ name: "Full Belly Farm" })
+  // use "populate" to gather all the information for each 'product'
   .populate("products")
   .then((farm) => console.log(farm));
