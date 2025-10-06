@@ -4,7 +4,7 @@ const { Schema } = mongoose;
 const farmSchema = new Schema({
   name: {
     type: String,
-    required: true,
+    required: [true, "Farm must have a name!"],
   },
   city: {
     type: String,
@@ -13,11 +13,12 @@ const farmSchema = new Schema({
     type: String,
     required: [true, "Email required"],
   },
-  product: {
-    type: Schema.Types.ObjectId,
-    ref: "Product",
-  },
+  products: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Product",
+    },
+  ],
 });
-
 const Farm = mongoose.model("Farm", farmSchema);
 module.exports = Farm;

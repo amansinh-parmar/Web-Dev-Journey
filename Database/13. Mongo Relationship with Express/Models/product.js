@@ -19,6 +19,7 @@ const productSchema = new Schema({
   price: {
     type: Number,
     required: true,
+    min: 0
   },
   category: {
     type: String,
@@ -33,4 +34,3 @@ const productSchema = new Schema({
 
 const Product = mongoose.model("Product", productSchema);
 module.exports = Product;
-// ================ Add multipl products ================
