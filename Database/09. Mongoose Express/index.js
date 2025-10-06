@@ -1,3 +1,4 @@
+// ============== Import Modules ==================
 const express = require("express");
 const app = express();
 const path = require("path");
@@ -6,13 +7,13 @@ const methodOverride = require("method-override");
 
 const Product = require("./product");
 
+// ============== Mongoose Connection ==================
 mongoose
   .connect("mongodb://127.0.0.1:27017/store", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
   // ============== To check wather it get an error ==================
-
   .then(() => {
     console.log("MONGO CONNECTION OPEN!!");
   })
@@ -21,6 +22,7 @@ mongoose
     console.log(err);
   });
 
+// ============== Middleware ==================
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({ extended: true }));
@@ -28,6 +30,7 @@ app.use(methodOverride("_method"));
 
 const categories = ["clothes", "watch", "shoes", "accessories", "jacket"];
 
+// ============== Routes ==================
 // ========== "aysnc call back" for 'routes' and "await" 'Mongoose operation' ==========
 app.get("/product", async (req, res) => {
   const { category } = req.query;
@@ -45,7 +48,7 @@ app.get("/product/new", (req, res) => {
   res.render("new", { categories });
 });
 
-// After adding new product post request via "_id" 
+// After adding new product post request via "_id"
 app.post("/product", async (req, res) => {
   const newProduct = new Product(req.body);
   await newProduct.save();
@@ -60,7 +63,7 @@ app.get("/product/:id", async (req, res) => {
   res.render("show", { product });
 });
 
-// Edit particular product page via "_id" 
+// Edit particular product page via "_id"
 app.get("/product/:id/edit", async (req, res) => {
   const { id } = req.params;
   const product = await Product.findById(id);
