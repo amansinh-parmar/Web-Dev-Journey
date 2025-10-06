@@ -19,21 +19,26 @@ mongoose
 
 // ============== Middleware ==================
 app.set("view engine", "ejs");
-app.set("Views", path.join(__dirname, "views"));
+app.set("views", path.join(__dirname, "../views"));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 
+// ============== Routes ==================
+app.get("/", (req, res) => {
+  res.render("home");
+});
 // ============== Farm Routes ==================
-// ============== View Farm List ==================
+// View Farm List
 app.get("/farms", async (req, res) => {
   const farms = await Farm.find({});
   res.render("Farm/index", { farms });
 });
 
-// ============== Add New Farm ==================
+// Add New Farm
 app.get("/farms/new", async (req, res) => {
   res.render("Farm/new");
 });
+
 // Post Request to add new Farm
 app.post("/farms", async (req, res) => {
   const farm = new Farm(req.body);
@@ -41,9 +46,16 @@ app.post("/farms", async (req, res) => {
   res.redirect("/farms");
 });
 
+// Show each farm individually
 app.get("/farms/:id", async (req, res) => {
   const farm = await Farm.findById(req.params.id).populate("products");
   res.render("Farm/show", { farm });
+});
+
+// Delete farm according using "id"
+app.delete("/farms/:id", async (req, res) => {
+  await Farm.findByIdAndDelete(req.params.id);
+  res.redirect("/farms");
 });
 
 // ============== Products Routes ==================
@@ -58,6 +70,11 @@ app.get("/farms/:id/products/new", async (req, res) => {
 app.post("/farms/:id/products", async (req, res) => {
   const { id } = req.params;
   const farm = await Farm.findById(id);
+
+  if (!farm) {
+    return res.status(404).send("Farm not found"); 
+  }
+
   const { name, price, category } = req.body;
   const product = new Product({ name, price, category });
 
@@ -67,15 +84,16 @@ app.post("/farms/:id/products", async (req, res) => {
   await farm.save();
   res.redirect(`/farms/${farm._id}`);
 });
+
 const categories = ["Fruit", "Vegetable", "Dairy"];
 
-// ============== Routes ==================
-app.get("/", (req, res) => {
-  res.render("Farm/home");
+// ============== Product Routes ==================
+app.get("/products", async (req, res) => {
+  const products = await Product.find({});
+  res.render("Product/index", { products, category: "All" });
 });
 
-// ============== Product Routes ==================
-// ================== add new product ==================
+// Add new product
 app.get("/products/new", (req, res) => {
   res.render("Product/new", { categories });
 });
@@ -84,7 +102,7 @@ app.get("/products/new", (req, res) => {
 app.post("/products", async (req, res) => {
   const newProduct = new Product(req.body);
   await newProduct.save();
-  res.redirect(`/product/${newProduct._id}`);
+  res.redirect(`/products/${newProduct._id}`);
 });
 
 // Get particular product page via "_id"
@@ -99,7 +117,7 @@ app.get("/products/:id", async (req, res) => {
 app.get("/product/:id/edit", async (req, res) => {
   const { id } = req.params;
   const product = await Product.findById(id);
-  res.render("edit", { product, categories });
+  res.render("Product/edit", { product, categories });
 });
 
 // Update particular product via "_id"
@@ -113,16 +131,17 @@ app.put("/product/:id", async (req, res) => {
 });
 
 // Delete particular product via "_id"
-app.delete("/product/:id", async (req, res) => {
+app.delete("/products/:id", async (req, res) => {
   const { id } = req.params;
   const deleteProduct = await Product.findByIdAndDelete(id);
-  res.redirect("/product");
+  res.redirect("/products");
 });
 
-// app.use((err, req, res, next) => {
-//   const { status = "500", message = "Server Error" } = err;
-//   res.status(status).send(message);
-// });
+// ============== Global Errors ==================
+app.use((err, req, res, next) => {
+  const { status = 500, message = "Server Error" } = err;
+  res.status(status).send(message);
+});
 
 // ============== Listening Port ==================
 app.listen(8080, () => {

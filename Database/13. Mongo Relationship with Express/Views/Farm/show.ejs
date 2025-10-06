@@ -30,12 +30,16 @@
             </li>
             <% } %>
     </ul>
-    <a href="/farms/<%= farm._id %>/products/new">Add Product </a>
-    <a href="/farms">All Farms</a>
+    <div>
+        <a href="/farms/<%= farm._id %>/products/new">Add Product </a>
+    </div>
+    <div>
+        <a href="/farms">All Farms</a>
+    </div>
     <!-- <a href="/farm/<%= farm._id %>/edit">Edit Products</a> -->
 
     <form action="/farms/<%= farm._id %>?_method=DELETE" method="post">
-        <button>Delete</button>
+        <button>Delete Farm</button>
     </form>
 
 </body>
