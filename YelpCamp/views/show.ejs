@@ -1,9 +1,10 @@
 <% layout('layouts/boilerplate') %>
 
     <div class="row">
-        <div class="col-4">
-            <div class="card">
-                <img src="<%= campground.image %>" class="card-img-top" alt="...">
+        <div class="col-7 row g-0">
+            <div class="card card border-light mb-3">
+                <img src="<%= campground.image %>" class="card-img-top img-thumbnail"
+                    style="height: 25rem; width: 45rem;" alt="...">
                 <div class="card-body">
                     <h5 class="card-title">
                         <%= campground.title %>
@@ -29,7 +30,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-6">
+        <div class="col-4">
             <h2>Leave a Review</h2>
             <form action="/campground/<%= campground._id %>/review" method="post" class="mb-3 validated-form"
                 novalidate>
@@ -56,15 +57,18 @@
                         </h5>
                         <p class="card-text">Review: <%= review.body %>
                         </p>
-                        <form action="/campground/<%= campground._id %>/review/<%= review._id %>?_method=DELETE" method="post">
+                        <form action="/campground/<%= campground._id %>/review/<%= review._id %>?_method=DELETE"
+                            method="post">
                             <button class="btn btn-sm btn-danger">Delete</button>
                         </form>
                     </div>
                 </div>
                 <% } %>
+                    <a href="/campground">Back to all campgrounds</a>
+
         </div>
     </div>
-
+<!-- 
     <footer>
         <a href="/campground">Back to all campgrounds</a>
-    </footer>
+    </footer> -->
