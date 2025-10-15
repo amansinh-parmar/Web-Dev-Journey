@@ -25,38 +25,35 @@ This repository contains all the code, projects, and notes I create while learni
 
 ## 📂 File and Folder Structure
 ---
-/
-├── app.js (or server.js)        # Main application entry point, sets up Express server and middleware
-├── package.json                 # Project metadata and dependencies
-├── README.md                   # Project overview and documentation
-├── .gitignore                  # Specifies files/folders Git should ignore
-│
-├── models/                     # Mongoose schemas/models for MongoDB collections
-│   ├── campground.js           # Schema for campground data
-│   ├── review.js               # Schema for reviews on campgrounds
-│   └── user.js                 # Schema for user authentication and data
-│
-├── routes/                     # Express route handlers for different parts of the app
-│   ├── campground.js           # Routes for campground CRUD (create, read, update, delete)
-│   ├── reviews.js              # Routes for creating/deleting reviews
-│   └── users.js                # Routes for user registration, login, logout
-│
-├── views/                      # EJS templates for rendering HTML pages
-│   ├── layouts/                # Base layout templates (e.g., boilerplate.ejs)
-│   ├── partials/               # Reusable view components (navbar, footer, flash messages)
-│   ├── campground/             # Views for campgrounds (new, edit, show)
-│   ├── users/                  # Views for user actions (login, register, error)
-│   └── home.ejs                # Home page template
-│
-├── public/                     # Static assets like CSS, JS files, images
-│   ├── stylesheets/            # Custom CSS styles
-│   └── javascript/             # Client-side JavaScript (e.g., form validation)
-│
-├── middleware/                 # Custom middleware functions (if any)
-│
-└── utils/                      # Utility functions and helpers (e.g., error handling)
 
+---
 
+### Explanation of Key Files and Folders
+
+- **app.js/server.js**  
+  Configures the Express server, connects to the database, sets up middleware, and starts the app.
+
+- **models/**  
+  Contains Mongoose schemas that define your data structure and validation for campgrounds, reviews, and users.
+
+- **routes/**  
+  Defines route handlers for different parts of the application (campgrounds, reviews, users).
+
+- **views/**  
+  Holds EJS templates responsible for generating HTML views rendered in the browser. Includes layout files for consistent page structure and partials for reusable UI parts.
+
+- **public/**  
+  Stores all static files served directly to clients such as CSS stylesheets, JavaScript scripts, and images.
+
+- **middleware/**  
+  Contains custom middleware for request handling, authentication, or error processing.
+
+- **utils/**  
+  Utility modules and helper functions used throughout the application to keep code modular and reusable.
+
+---
+
+Adding this overview helps you and other developers quickly understand the organization of your project and where to find or add new code.
 
 ---
 
