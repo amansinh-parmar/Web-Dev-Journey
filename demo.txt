@@ -23,6 +23,40 @@ This repository contains all the code, projects, and notes I create while learni
 
 ---
 
+## 📂 File and Folder Structure
+---
+
+---
+
+### Explanation of Key Files and Folders
+
+- **app.js/server.js**  
+  Configures the Express server, connects to the database, sets up middleware, and starts the app.
+
+- **models/**  
+  Contains Mongoose schemas that define your data structure and validation for campgrounds, reviews, and users.
+
+- **routes/**  
+  Defines route handlers for different parts of the application (campgrounds, reviews, users).
+
+- **views/**  
+  Holds EJS templates responsible for generating HTML views rendered in the browser. Includes layout files for consistent page structure and partials for reusable UI parts.
+
+- **public/**  
+  Stores all static files served directly to clients such as CSS stylesheets, JavaScript scripts, and images.
+
+- **middleware/**  
+  Contains custom middleware for request handling, authentication, or error processing.
+
+- **utils/**  
+  Utility modules and helper functions used throughout the application to keep code modular and reusable.
+
+---
+
+Adding this overview helps you and other developers quickly understand the organization of your project and where to find or add new code.
+
+
+---
 
 ## 🎯 Goals
 
