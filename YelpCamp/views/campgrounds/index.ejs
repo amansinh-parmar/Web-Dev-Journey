@@ -1,37 +1,69 @@
-<!-- layout('view') is features in 'ejs-mate' when called anywhere inside a template,
-  request that the out of the current template be passed to the given view as the "body" local. -->
-<div class="conatainer offset-2">
-    <% layout('layouts/boilerplate') %>
+<!-- 
+  layout('layouts/boilerplate') is a feature from 'ejs-mate' template engine.
+  It allows this view to extend a base layout called 'boilerplate.ejs', 
+  which typically includes the common HTML structure (head, header, footer, etc.).
+  The content inside this file is injected into the layout’s "body" placeholder.
+-->
 
-        <h2>All Campgrounds</h2>
+<div class="container offset-2"> <!-- Main container with some margin offset -->
 
-        <a class="btn btn-warning mb-4" href="/campground/new">ADD CAMPGROUND</a>
+    <% layout('layouts/boilerplate') %> <!-- Use base layout -->
 
-        <% for(let campground of campgrounds){ %>
+    <h2>All Campgrounds</h2> <!-- Page title -->
 
-            <div class="card mb-2 col-9">
-                <div class="row g-0 align-items-center">
-                    <div class="col-md-4">
-                        <img src="<%= campground.image %>" class="img-fluid rounded-start"
-                            style="height: 300px;  object-fit: cover;" alt="<%= campground.title %>">
-                    </div>
-                    <div class="col-md-8">
-                        <div class="card-body p-4">
-                            <h5 class="card-title mb-1">
-                                <%= campground.title %>
-                            </h5>
-                            <p class="card-text mb-1">
-                                <%= campground.description %>
-                            </p>
-                            <p class="card-text mb-2"><small class="text-muted">
-                                    <%= campground.location %>
-                                </small></p>
-                            <a class="btn btn-primary btn-sm" href="/campground/<%= campground._id %>">
-                                View <%= campground.title %>
-                            </a>
-                        </div>
+    <!-- Button to navigate to the page for adding a new campground -->
+    <a class="btn btn-warning mb-4" href="/campground/new">ADD CAMPGROUND</a>
+
+    <!-- Loop through the 'campgrounds' array passed from the server -->
+    <% for(let campground of campgrounds){ %>
+
+        <!-- Bootstrap card component for each campground -->
+        <div class="card mb-2 col-9">
+            <div class="row g-0 align-items-center"> <!-- Row with no gutters and vertically aligned -->
+
+                <!-- Image section of the card -->
+                <div class="col-md-4">
+                    <img src="<%= campground.image %>" 
+                         class="img-fluid rounded-start" 
+                         style="height: 300px; object-fit: cover;" 
+                         alt="<%= campground.title %>">
+                    <!-- 
+                      - src: shows the campground’s image URL
+                      - alt: accessibility, shows title if image fails
+                      - object-fit: cover keeps the image aspect ratio while filling the box 
+                    -->
+                </div>
+
+                <!-- Content section of the card -->
+                <div class="col-md-8">
+                    <div class="card-body p-4">
+                        <!-- Campground title -->
+                        <h5 class="card-title mb-1">
+                            <%= campground.title %>
+                        </h5>
+
+                        <!-- Short description -->
+                        <p class="card-text mb-1">
+                            <%= campground.description %>
+                        </p>
+
+                        <!-- Location of the campground, smaller and muted text -->
+                        <p class="card-text mb-2">
+                            <small class="text-muted">
+                                <%= campground.location %>
+                            </small>
+                        </p>
+
+                        <!-- Button linking to the individual campground’s page -->
+                        <a class="btn btn-primary btn-sm" href="/campground/<%= campground._id %>">
+                            View <%= campground.title %>
+                        </a>
                     </div>
                 </div>
+
             </div>
-            <% } %>
+        </div>
+
+    <% } %> <!-- End for loop -->
+
 </div>

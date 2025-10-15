@@ -1,23 +1,28 @@
 <% layout('layouts/boilerplate') %>
-    <h2>Login</h2>
-    <form action="/login" method="post" class="validated-form" novalidate>
-        <!-- FOR USERNAME -->
-        <div class="mb-2">
-            <label class="form-label" for="username">Username</label>
-            <input class="form-control" type="text" name="username" id="username" required>
-            <div class="valid-feedback">
-                Looks good!
-            </div>
-        </div>
+<!-- Uses the common site layout for consistent look and feel -->
 
-        <!-- FOR PASSWORD -->
-        <div class="mb-2">
-            <label class="form-label" for="password">Password</label>
-            <input class="form-control" type="password" name="password" id="password" required>
-            <div class="valid-feedback">
-                Looks good!
-            </div>
-        </div>
+<h2>Login</h2>
 
-        <button class="btn btn-success">Login</button>
-    </form>
+<!-- Login form -->
+<form action="/login" method="post" class="validated-form" novalidate>
+    <!-- Username input field -->
+    <div class="mb-2">
+        <label class="form-label" for="username">Username</label>
+        <input class="form-control" type="text" name="username" id="username" required>
+        <div class="valid-feedback">
+            Looks good!
+        </div>
+    </div>
+
+    <!-- Password input field -->
+    <div class="mb-2">
+        <label class="form-label" for="password">Password</label>
+        <input class="form-control" type="password" name="password" id="password" required>
+        <div class="valid-feedback">
+            Looks good!
+        </div>
+    </div>
+
+    <!-- Submit button -->
+    <button class="btn btn-success">Login</button>
+</form>

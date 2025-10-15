@@ -1,24 +1,33 @@
-// Example starter JavaScript for disabling form submissions if there are invalid fields
-(() => {
-  "use strict";
+// =============== Client-Side Form Validation Script ===============
+// This script uses Bootstrap's validation classes to prevent form submission
+// if the form has invalid fields, and gives visual feedback to the user.
 
-  // Fetch all the forms we want to apply custom Bootstrap validation styles to
+// Immediately Invoked Function Expression (IIFE) to avoid polluting global scope
+(() => {
+  "use strict"; // Enforce stricter parsing and error handling in JavaScript
+
+  // Select all forms that need Bootstrap custom validation
   const forms = document.querySelectorAll(".validated-form");
 
-  // Loop over them and prevent submission
+  // Loop through each form and apply a 'submit' event listener
   Array.from(forms).forEach(function (form) {
     form.addEventListener(
       "submit",
       function (event) {
+        // Check if form is invalid
         if (!form.checkValidity()) {
-          event.preventDefault(); // Stop form submission
-          event.stopPropagation();
+          event.preventDefault(); // Stop form from submitting
+          event.stopPropagation(); // Stop the event from bubbling up
         }
-        form.classList.add("was-validated"); // Show validation feedback
+
+        // Add Bootstrap class to show validation feedback (green/red borders, messages)
+        form.classList.add("was-validated");
       },
-      false
+      false // Use event capturing = false (default bubbling phase)
     );
   });
 })();
 
+// =============== Optional Alert for Debugging ===============
+// This was likely used for testing. You can uncomment for quick debugging.
 // alert("THIS IS AN ALERT MESSAGE FROM PUBLIC DIRECTORY!!");

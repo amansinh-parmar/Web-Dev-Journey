@@ -1,111 +1,152 @@
-// =============== Import Modules ===============
+// =============== Import Required Modules ===============
 const express = require("express");
 const app = express();
 const path = require("path");
 
+// Session and flash messages for storing user sessions and showing temporary messages
 const session = require("express-session");
 const flash = require("connect-flash");
+
+// ejs-mate allows us to use layouts/partials with EJS templates
 const ejsMate = require("ejs-mate");
+
+// Allows PUT & DELETE methods via query parameter (?_method=DELETE)
 const methodOverride = require("method-override");
+
+// Passport is used for authentication
 const passport = require("passport");
 const localStrategy = require("passport-local");
 
+// Custom error handling class (we use this to throw custom errors)
 const ExpressError = require("./utilities/ExpressError");
+
+// User model from Mongoose (used for authentication & user database)
 const User = require("./models/user");
 
+// Route files (these are separated route logic files for cleanliness)
 const campgroundRoutes = require("./routes/campground");
 const reviewRoutes = require("./routes/reviews");
 const userRoutes = require("./routes/user");
 
-// =============== Connecting with Database ===============
+// =============== Connect to MongoDB ===============
 const mongoose = require("mongoose");
+
+// Import models in case you need them elsewhere in this file
 const campground = require("./models/campground");
 const review = require("./models/review");
 
-// mongodb://server port/'database name'
+// Connect to local MongoDB server & database "yelp-camp"
 mongoose.connect("mongodb://127.0.0.1:27017/yelp-camp");
 
-// check there is an error or not
+// Check for successful or failed database connection
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
 db.once("open", () => {
   console.log("Database Connected!!");
 });
 
-// =============== Middleware ===============
-// Get "ejs" Templates
+// =============== Set Up Express Middleware ===============
+
+// Set view engine to EJS for rendering HTML
 app.set("view engine", "ejs");
+// Set views directory to 'views' folder
 app.set("views", path.join(__dirname, "views"));
+// Use ejs-mate engine for layout support
 app.engine("ejs", ejsMate);
 
+// Parse URL-encoded bodies (used for form data)
 app.use(express.urlencoded({ extended: true }));
+// Allow method override (for PUT/DELETE methods in forms)
 app.use(methodOverride("_method"));
+// Serve static files from 'public' directory (like CSS, JS, images)
 app.use(express.static(path.join(__dirname, "public")));
 
+// =============== Session Configuration ===============
 const sessionConfig = {
-  secret: "ThisShouldBeBetterSecret",
-  resave: false,
-  saveUninitialized: true,
+  secret: "ThisShouldBeBetterSecret", // secret key for signing the session ID cookie
+  resave: false, // don't save session if not modified
+  saveUninitialized: true, // save uninitialized sessions (helpful for login/logout flow)
   cookie: {
-    httpOnly: true,
-    expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
-    maxAge: 1000 * 60 * 60 * 24 * 7,
+    httpOnly: true, // for security: client-side JS can't access the cookie
+    expires: Date.now() + 1000 * 60 * 60 * 24 * 7, // 1 week from now
+    maxAge: 1000 * 60 * 60 * 24 * 7, // maximum age of cookie (1 week)
   },
 };
-app.use(session(sessionConfig));
-app.use(flash());
+app.use(session(sessionConfig)); // Add session middleware to app
+app.use(flash()); // Enable flash messages for alerts (like success/fail messages)
 
-// use passport module to save user data after authentication
-app.use(passport.initialize());
-app.use(passport.session());
-// use passport module and do authenticate store data in 'User' model
+// =============== Passport Authentication Setup ===============
+app.use(passport.initialize()); // Initialize passport
+app.use(passport.session()); // Persistent login sessions
+
+// Use 'localStrategy' for login using username and password (provided by passport-local-mongoose)
 passport.use(new localStrategy(User.authenticate()));
 
-passport.serializeUser(User.serializeUser()); //get into the User
-passport.deserializeUser(User.deserializeUser()); //logout from the User
+// These methods serialize and deserialize user info to and from the session
+passport.serializeUser(User.serializeUser()); // Store user in session
+passport.deserializeUser(User.deserializeUser()); // Remove user from session
 
+// =============== Flash Message Middleware ===============
+// Middleware to pass user & flash message info to ALL templates
 app.use((req, res, next) => {
-  res.locals.success = req.flash("success");
-  res.locals.error = req.flash("error");
-  res.locals.currentUser = req.user;
-
+  console.log(req.session); // Optional: logs current session data
+  res.locals.currentUser = req.user; // Makes 'currentUser' available in templates
+  res.locals.success = req.flash("success"); // Pass success messages
+  res.locals.error = req.flash("error"); // Pass error messages
   next();
 });
 
-// ==================== IMPORT ROUTES ====================
+/*
+// Optional Middleware to Save Return Path (e.g., after login redirect back)
+app.use((req, res, next) => {
+  if (
+    !req.user &&
+    req.method === "GET" &&
+    !req.path.startsWith("/login") &&
+    !req.path.startsWith("/register")
+  ) {
+    req.session.returnTo = req.originalUrl;
+    console.log("Stored returnTo:", req.session.returnTo);
+  }
+  next();
+});
+*/
+
+// =============== ROUTES ===============
+
+// ========== TEMP ROUTE TO CREATE FAKE USER ==========
 app.get("/fakeUser", async (req, res) => {
+  // This creates a new user with username 'Jack' and password 'cars'
   const user = new User({ email: "jackreacher@gmail.com", username: "Jack" });
   const newUser = await User.register(user, "cars");
-  res.send(newUser);
+  res.send(newUser); // returns the new user in response
 });
 
-// register - FORM
-// POST / register - Create a USER
+// Use imported route files for better structure & modularity
+app.use("/", userRoutes); // for login, register, logout
+app.use("/campground", campgroundRoutes); // for campground-related routes
+app.use("/campground/:id/review", reviewRoutes); // for reviews nested under campgrounds
 
-// Prefixed the 'route' to edit one place if we need (makes sure don't add any route in 'shelters' file)
-app.use("/", userRoutes);
-app.use("/campground", campgroundRoutes);
-app.use("/campground/:id/review", reviewRoutes);
-
-// =============== Routes ===============
-// =============== "Home Page" ===============
+// =============== HOME PAGE ROUTE ===============
 app.get("/", (req, res) => {
-  res.render("home");
+  res.render("home"); // renders views/home.ejs
 });
 
-// =============== Global Error Handler ===============
+// =============== ERROR HANDLING ===============
+
+// Catch-all route for undefined routes (triggers 404 error)
 app.all(/(.*)/, (req, res, next) => {
-  next(new ExpressError("Page Not Found", 404));
+  next(new ExpressError("Page Not Found", 404)); // custom error with 404 code
 });
 
+// Global error handler middleware
 app.use((err, req, res, next) => {
-  const { statusCode = 500 } = err;
-  if (!err.message) err.message = "OHHH  NO, SOMETHING WENT WRONG!!!!";
-  res.status(statusCode).render("error", { err });
-  // res.send("OHHH  NO, SOMETHING WENT WRONG!!!!");
+  const { statusCode = 500 } = err; // default status 500
+  if (!err.message) err.message = "OHHH  NO, SOMETHING WENT WRONG!!!!"; // fallback message
+  res.status(statusCode).render("error", { err }); // show error.ejs template
 });
 
-// =============== Listen Port ===============
+// =============== START SERVER ===============
 app.listen(3000, () => {
-  console.log("Server Login Port:3000");
+  console.log("Server Login Port:3000"); // Start server on port 3000
 });

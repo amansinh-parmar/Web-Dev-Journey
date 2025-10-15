@@ -1,49 +1,66 @@
-// =============== Connecting with Database ===============
+// API Key for fetch images
+// const PEXELS_API_KEY =
+//   "qf4WkaFrva8Ktd5ydWNa6hb9hvEAcFG9clJo8SLDVOQpZSyhObEeQqF6";
+
+
+// =============== Connect to MongoDB ===============
 const mongoose = require("mongoose");
-// const cities = require("./copy_city");
+
+// Import seed data (random city and state names)
+// const cities = require("./copy_city"); // Optional alternative file
 const cities = require("./cities");
+
+// Import title generators (e.g., "Forest Creek", "Dusty Canyon")
 const { places, descriptors } = require("./seedHelpers");
+
+// Import Campground model to insert data into the database
 const Campground = require("../models/campground");
 
-// mongodb://server port/'database name'
+// Connect to the local MongoDB database
 mongoose.connect("mongodb://127.0.0.1:27017/yelp-camp", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 
-// mongoose.connect("mongodb://127.0.0.1:27017/yelp-camp");
-
-// check there is an error or not
+// Handle connection events (log success or error)
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
 db.once("open", () => {
   console.log("Database Connected!!");
 });
 
+
+// =============== Helper Function ===============
+// Picks a random element from any given array
 const sample = (array) => array[Math.floor(Math.random() * array.length)];
 
-// API Key for fetch images
-// const PEXELS_API_KEY =
-//   "qf4WkaFrva8Ktd5ydWNa6hb9hvEAcFG9clJo8SLDVOQpZSyhObEeQqF6";
 
+// =============== Seed the Database ===============
 const seedDB = async () => {
-  await Campground.deleteMany({});
+  await Campground.deleteMany({}); // Clear existing campgrounds
+
+  // Create 50 random campgrounds
   for (let i = 1; i < 50; i++) {
-    const randomIndex = Math.floor(Math.random() * 500);
-    const price = Math.floor(Math.random() * 20) + 10;
-    // const image = await fetchCampingImage(); // get a fresh image for each campground
+    const randomIndex = Math.floor(Math.random() * 500); // Get a random city
+    const price = Math.floor(Math.random() * 20) + 10; // Generate a random price between 10 and 30
+
+    // Create new campground object with random data
     const camp = new Campground({
-      location: `${cities[randomIndex].city}, ${cities[randomIndex].state}`,
-      title: `${sample(descriptors)} ${sample(places)}`,
-      image: `https://picsum.photos/400?random=${Math.random()}`,
+      location: `${cities[randomIndex].city}, ${cities[randomIndex].state}`, // Random city, state
+      title: `${sample(descriptors)} ${sample(places)}`, // Random campground name
+      image: `https://picsum.photos/400?random=${Math.random()}`, // Random placeholder image
       description:
         "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iusto ex ducimus libero architecto, nulla sunt.",
-      price,
+      price, // Random price
     });
-    await camp.save();
+
+    await camp.save(); // Save campground to the database
   }
 };
 
+
+// =============== Run Seeder and Close DB ===============
+// Call the seeding function, then close the database connection
 seedDB().then(() => {
-  mongoose.connection.close();
+  mongoose.connection.close(); // Close connection after seeding is done
 });
