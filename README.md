@@ -25,6 +25,37 @@ This repository contains all the code, projects, and notes I create while learni
 
 ## 📂 File and Folder Structure
 ---
+/
+├── app.js (or server.js)        # Main application entry point, sets up Express server and middleware
+├── package.json                 # Project metadata and dependencies
+├── README.md                   # Project overview and documentation
+├── .gitignore                  # Specifies files/folders Git should ignore
+│
+├── models/                     # Mongoose schemas/models for MongoDB collections
+│   ├── campground.js           # Schema for campground data
+│   ├── review.js               # Schema for reviews on campgrounds
+│   └── user.js                 # Schema for user authentication and data
+│
+├── routes/                     # Express route handlers for different parts of the app
+│   ├── campground.js           # Routes for campground CRUD (create, read, update, delete)
+│   ├── reviews.js              # Routes for creating/deleting reviews
+│   └── users.js                # Routes for user registration, login, logout
+│
+├── views/                      # EJS templates for rendering HTML pages
+│   ├── layouts/                # Base layout templates (e.g., boilerplate.ejs)
+│   ├── partials/               # Reusable view components (navbar, footer, flash messages)
+│   ├── campground/             # Views for campgrounds (new, edit, show)
+│   ├── users/                  # Views for user actions (login, register, error)
+│   └── home.ejs                # Home page template
+│
+├── public/                     # Static assets like CSS, JS files, images
+│   ├── stylesheets/            # Custom CSS styles
+│   └── javascript/             # Client-side JavaScript (e.g., form validation)
+│
+├── middleware/                 # Custom middleware functions (if any)
+│
+└── utils/                      # Utility functions and helpers (e.g., error handling)
+
 
 
 ---
