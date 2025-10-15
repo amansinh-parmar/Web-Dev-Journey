@@ -7,11 +7,15 @@ const session = require("express-session");
 const flash = require("connect-flash");
 const ejsMate = require("ejs-mate");
 const methodOverride = require("method-override");
+const passport = require("passport");
+const localStrategy = require("passport-local");
 
 const ExpressError = require("./utilities/ExpressError");
+const User = require("./models/user");
 
-const campgrounds = require("./routes/campground");
-const reviews = require("./routes/reviews");
+const campgroundRoutes = require("./routes/campground");
+const reviewRoutes = require("./routes/reviews");
+const userRoutes = require("./routes/user");
 
 // =============== Connecting with Database ===============
 const mongoose = require("mongoose");
@@ -51,16 +55,37 @@ const sessionConfig = {
 app.use(session(sessionConfig));
 app.use(flash());
 
+// use passport module to save user data after authentication
+app.use(passport.initialize());
+app.use(passport.session());
+// use passport module and do authenticate store data in 'User' model
+passport.use(new localStrategy(User.authenticate()));
+
+passport.serializeUser(User.serializeUser()); //get into the User
+passport.deserializeUser(User.deserializeUser()); //logout from the User
+
 app.use((req, res, next) => {
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
+  res.locals.currentUser = req.user;
+
   next();
 });
 
 // ==================== IMPORT ROUTES ====================
+app.get("/fakeUser", async (req, res) => {
+  const user = new User({ email: "jackreacher@gmail.com", username: "Jack" });
+  const newUser = await User.register(user, "cars");
+  res.send(newUser);
+});
+
+// register - FORM
+// POST / register - Create a USER
+
 // Prefixed the 'route' to edit one place if we need (makes sure don't add any route in 'shelters' file)
-app.use("/campground", campgrounds);
-app.use("/campground/:id/review", reviews);
+app.use("/", userRoutes);
+app.use("/campground", campgroundRoutes);
+app.use("/campground/:id/review", reviewRoutes);
 
 // =============== Routes ===============
 // =============== "Home Page" ===============
