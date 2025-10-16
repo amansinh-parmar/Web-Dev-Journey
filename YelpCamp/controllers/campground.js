@@ -1,0 +1,69 @@
+// =============== Import Required Modules ===============
+const Campground = require("../models/campground");
+
+// =============== Controller for Campground to export for routes and routes export for app.js ===============
+// =============== Index Router ===============
+module.exports.index = async (req, res) => {
+  const campgrounds = await Campground.find({});
+  res.render("campgrounds/index", { campgrounds }); // Render 'index.ejs' with data
+};
+
+// =============== Render New Campground Template ===============
+module.exports.randerNewForm = (req, res) => {
+  res.render("campgrounds/new"); // Only accessible if user is logged in
+};
+
+// =============== Create New Router ===============
+module.exports.createCampground = async (req, res, next) => {
+  // Create new campground using submitted form data
+  const campground = new Campground(req.body.campground);
+  campground.author = req.user._id; // Get user id from author for 'Campground'
+  await campground.save(); // Save to MongoDB
+  req.flash("success", "Successfully made a new campground!!");
+  res.redirect(`/campgrounds/${campground._id}`); // Redirect to show page
+};
+
+// =============== Render Show Campground Template ===============
+module.exports.showCampground = async (req, res) => {
+  const campground = await Campground.findById(req.params.id)
+    .populate({ path: "review", populate: { path: "author" } })
+    .populate("author");
+  // console.log(campground);
+  // If campground doesn't exist, redirect back with error message
+  if (!campground) {
+    req.flash("error", "Cannot find that campground!");
+    return res.redirect("/campgrounds");
+  }
+  res.render("show", { campground }); // Render show.ejs
+};
+
+// =============== Render Edit Campground Template ===============
+module.exports.randerEditForm = async (req, res) => {
+  const { id } = req.params;
+  const campground = await Campground.findById(id);
+
+  if (!campground) {
+    req.flash("error", "Cannot find that campground!");
+    return res.redirect("/campgrounds");
+  }
+  res.render("campgrounds/edit", { campground }); // Render edit form
+};
+
+// =============== Update Campground ===============
+module.exports.updateCampground = async (req, res) => {
+  const { id } = req.params;
+  // Use spread operator to update campground fields
+  const campground = await Campground.findByIdAndUpdate(id, {
+    ...req.body.campground,
+  });
+  req.flash("success", "Successfully updated campground!!");
+  res.redirect(`/campgrounds/${campground._id}`); // Redirect to updated campground page
+};
+
+// =============== Delete Campground ===============
+module.exports.deleteCampground = async (req, res) => {
+  const { id } = req.params;
+  const deleteCamp = await Campground.findByIdAndDelete(id); // Remove from DB
+  req.flash("success", "Successfully deleted campground!!");
+  res.redirect("/campgrounds"); // Redirect back to campgrounds list
+};
