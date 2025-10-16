@@ -1,18 +1,18 @@
-<% layout('layouts/boilerplate') %> 
-<!-- 
+<% layout('layouts/boilerplate') %>
+    <!-- 
   Extends the base layout 'boilerplate.ejs' using 'ejs-mate'.
   This ensures consistent site-wide styles and structure.
 -->
 
-<div class="row">
-    <h1 class="text-center mb-5">New Campground</h1> 
-    <!-- Page heading -->
+    <div class="row">
+        <h1 class="text-center mb-5">New Campground</h1>
+        <!-- Page heading -->
 
-    <div class="col-5 offset-4">
-        <!-- Center the form with Bootstrap grid (5 columns wide, offset by 4) -->
+        <div class="col-5 offset-4">
+            <!-- Center the form with Bootstrap grid (5 columns wide, offset by 4) -->
 
-        <form class="pt-20 validated-form" action="/campground" method="post" novalidate>
-        <!-- 
+            <form class="pt-20 validated-form" action="/campgrounds" method="post" novalidate>
+                <!-- 
           The form for creating a new campground:
           - action="/campground" means form data posts to this route on server
           - method="post" means it’s a POST request to add data
@@ -20,84 +20,63 @@
           - novalidate disables native HTML validation, so you can use your own script
         -->
 
-            <!-- Title input -->
-            <div class="mb-2">
-                <label class="form-label" for="title">Title</label>
-                <input class="form-control" 
-                       type="text" 
-                       name="campground[title]" 
-                       id="title" 
-                       required>
-                <div class="valid-feedback">
-                    Looks good!
+                <!-- Title input -->
+                <div class="mb-2">
+                    <label class="form-label" for="title">Title</label>
+                    <input class="form-control" type="text" name="campground[title]" id="title" required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
                 </div>
-            </div>
 
-            <!-- Location input -->
-            <div class="mb-2">
-                <label class="form-label" for="location">Location</label>
-                <input class="form-control" 
-                       type="text" 
-                       name="campground[location]" 
-                       id="location" 
-                       required>
-                <div class="valid-feedback">
-                    Looks good!
+                <!-- Location input -->
+                <div class="mb-2">
+                    <label class="form-label" for="location">Location</label>
+                    <input class="form-control" type="text" name="campground[location]" id="location" required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
                 </div>
-            </div>
 
-            <!-- Image URL input -->
-            <div class="mb-2">
-                <label class="form-label" for="image">Image URL</label>
-                <input class="form-control" 
-                       type="text" 
-                       name="campground[image]" 
-                       id="image" 
-                       required>
-                <div class="valid-feedback">
-                    Looks good!
+                <!-- Image URL input -->
+                <div class="mb-2">
+                    <label class="form-label" for="image">Image URL</label>
+                    <input class="form-control" type="text" name="campground[image]" id="image" required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
                 </div>
-            </div>
 
-            <!-- Price input with Bootstrap input group for currency symbol -->
-            <div class="mb-2">
-                <label class="form-label" for="price">Campground Price</label>
-                <div class="input-group">
-                    <span class="input-group-text" id="basic-addon1">$</span>
-                    <input type="text" 
-                           class="form-control" 
-                           id="price" 
-                           placeholder="0.00" 
-                           aria-label="price"
-                           aria-describedby="basic-addon1" 
-                           name="campground[price]" 
-                           required>
+                <!-- Price input with Bootstrap input group for currency symbol -->
+                <div class="mb-2">
+                    <label class="form-label" for="price">Campground Price</label>
+                    <div class="input-group">
+                        <span class="input-group-text" id="basic-addon1">$</span>
+                        <input type="text" class="form-control" id="price" placeholder="0.00" aria-label="price"
+                            aria-describedby="basic-addon1" name="campground[price]" required>
+                    </div>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
                 </div>
-                <div class="valid-feedback">
-                    Looks good!
+
+                <!-- Description textarea -->
+                <div class="mb-4">
+                    <label class="form-label" for="description">Description</label>
+                    <textarea class="form-control" name="campground[description]" id="description" required></textarea>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
                 </div>
-            </div>
 
-            <!-- Description textarea -->
-            <div class="mb-4">
-                <label class="form-label" for="description">Description</label>
-                <textarea class="form-control" 
-                          name="campground[description]" 
-                          id="description"
-                          required></textarea>
-                <div class="valid-feedback">
-                    Looks good!
+                <!-- Submit button -->
+                <div class="mb-3">
+                    <button class="btn btn-success">Add Campground</button>
                 </div>
-            </div>
 
-            <!-- Submit button -->
-            <div class="mb-3">
-                <button class="btn btn-success">Add Campground</button>
-            </div>
+            </form>
 
-        </form>
-
-        <!-- Link back to all campgrounds -->
-        <a href="/campground">Back to all campground</a>
+            <!-- Link back to all campgrounds -->
+            <a href="/campgrounds">Back to all campground</a>
+        </div>
     </div>
-</div>

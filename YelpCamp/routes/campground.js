@@ -11,23 +11,10 @@ const ExpressError = require("../utilities/ExpressError");
 // Mongoose Campground model (database schema)
 const Campground = require("../models/campground");
 
-// Joi validation schema for campground input
-const { campgroundSchema } = require("../schemas");
-
 // Custom middleware to protect routes (check if user is logged in)
-const { isLoggedIn } = require("../middleware");
+const { isLoggedIn, validateCampground, isAuthor } = require("../middleware");
 
 // =============== Validation Middleware ===============
-// This function validates form input using Joi before saving or updating
-const validateCampground = (req, res, next) => {
-  const { error } = campgroundSchema.validate(req.body); // Validate request body
-  if (error) {
-    const msg = error.details.map((el) => el.message).join(","); // Join all error messages
-    throw new ExpressError(msg, 400); // Throw custom error if invalid
-  } else {
-    next(); // Proceed to route handler
-  }
-};
 
 // =============== Routes ===============
 
@@ -56,9 +43,10 @@ router.post(
   catchAsync(async (req, res, next) => {
     // Create new campground using submitted form data
     const campground = new Campground(req.body.campground);
+    campground.author = req.user._id; // Get user id from author for 'Campground'
     await campground.save(); // Save to MongoDB
     req.flash("success", "Successfully made a new campground!!");
-    res.redirect(`/campground/${campground._id}`); // Redirect to show page
+    res.redirect(`/campgrounds/${campground._id}`); // Redirect to show page
   })
 );
 
@@ -67,13 +55,13 @@ router.post(
 router.get(
   "/:id",
   catchAsync(async (req, res) => {
-    const campground = await Campground.findById(req.params.id).populate(
-      "review"
-    );
+    const campground = await Campground.findById(req.params.id)
+      .populate("review")
+      .populate("author");
     // If campground doesn't exist, redirect back with error message
     if (!campground) {
       req.flash("error", "Cannot find that campground!");
-      return res.redirect("/campground");
+      return res.redirect("/campgrounds");
     }
     res.render("show", { campground }); // Render show.ejs
   })
@@ -83,12 +71,15 @@ router.get(
 // Show edit form for an existing campground
 router.get(
   "/:id/edit",
-  isLoggedIn, // Only logged-in users can edit
+  isLoggedIn,
+  isAuthor, // Only logged-in users can edit
   catchAsync(async (req, res) => {
-    const campground = await Campground.findById(req.params.id);
+    const { id } = req.params;
+    const campground = await Campground.findById(id);
+
     if (!campground) {
       req.flash("error", "Cannot find that campground!");
-      return res.redirect("/campground");
+      return res.redirect("/campgrounds");
     }
     res.render("campgrounds/edit", { campground }); // Render edit form
   })
@@ -99,6 +90,7 @@ router.get(
 router.put(
   "/:id",
   isLoggedIn, // Protect route
+  isAuthor,
   validateCampground, // Validate updated data
   catchAsync(async (req, res) => {
     const { id } = req.params;
@@ -107,7 +99,7 @@ router.put(
       ...req.body.campground,
     });
     req.flash("success", "Successfully updated campground!!");
-    res.redirect(`/campground/${campground._id}`); // Redirect to updated campground page
+    res.redirect(`/campgrounds/${campground._id}`); // Redirect to updated campground page
   })
 );
 
@@ -116,11 +108,12 @@ router.put(
 router.delete(
   "/:id",
   isLoggedIn, // Only logged-in users can delete
+  isAuthor,
   catchAsync(async (req, res) => {
     const { id } = req.params;
     const deleteCamp = await Campground.findByIdAndDelete(id); // Remove from DB
     req.flash("success", "Successfully deleted campground!!");
-    res.redirect("/campground"); // Redirect back to campgrounds list
+    res.redirect("/campgrounds"); // Redirect back to campgrounds list
   })
 );
 

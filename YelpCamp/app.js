@@ -124,8 +124,8 @@ app.get("/fakeUser", async (req, res) => {
 
 // Use imported route files for better structure & modularity
 app.use("/", userRoutes); // for login, register, logout
-app.use("/campground", campgroundRoutes); // for campground-related routes
-app.use("/campground/:id/review", reviewRoutes); // for reviews nested under campgrounds
+app.use("/campgrounds", campgroundRoutes); // for campground-related routes
+app.use("/campgrounds/:id/review", reviewRoutes); // for reviews nested under campgrounds
 
 // =============== HOME PAGE ROUTE ===============
 app.get("/", (req, res) => {

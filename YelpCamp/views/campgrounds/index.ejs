@@ -12,7 +12,7 @@
     <h2>All Campgrounds</h2> <!-- Page title -->
 
     <!-- Button to navigate to the page for adding a new campground -->
-    <a class="btn btn-warning mb-4" href="/campground/new">ADD CAMPGROUND</a>
+    <a class="btn btn-warning mb-4" href="/campgrounds/new">ADD CAMPGROUND</a>
 
     <!-- Loop through the 'campgrounds' array passed from the server -->
     <% for(let campground of campgrounds){ %>
@@ -55,7 +55,7 @@
                         </p>
 
                         <!-- Button linking to the individual campground’s page -->
-                        <a class="btn btn-primary btn-sm" href="/campground/<%= campground._id %>">
+                        <a class="btn btn-primary btn-sm" href="/campgrounds/<%= campground._id %>">
                             View <%= campground.title %>
                         </a>
                     </div>

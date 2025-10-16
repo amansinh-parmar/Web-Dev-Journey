@@ -11,6 +11,11 @@ const reviewSchema = new Schema({
 
   // 'rating' stores a numeric value (usually 1 to 5 stars)
   rating: Number,
+
+  author: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+  },
 });
 
 // =============== Export Review Model ===============

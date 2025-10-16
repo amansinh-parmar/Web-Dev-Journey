@@ -2,7 +2,6 @@
 // const PEXELS_API_KEY =
 //   "qf4WkaFrva8Ktd5ydWNa6hb9hvEAcFG9clJo8SLDVOQpZSyhObEeQqF6";
 
-
 // =============== Connect to MongoDB ===============
 const mongoose = require("mongoose");
 
@@ -29,11 +28,9 @@ db.once("open", () => {
   console.log("Database Connected!!");
 });
 
-
 // =============== Helper Function ===============
 // Picks a random element from any given array
 const sample = (array) => array[Math.floor(Math.random() * array.length)];
-
 
 // =============== Seed the Database ===============
 const seedDB = async () => {
@@ -46,6 +43,7 @@ const seedDB = async () => {
 
     // Create new campground object with random data
     const camp = new Campground({
+      author: "68ef8813ba23f5cc79ff2582",
       location: `${cities[randomIndex].city}, ${cities[randomIndex].state}`, // Random city, state
       title: `${sample(descriptors)} ${sample(places)}`, // Random campground name
       image: `https://picsum.photos/400?random=${Math.random()}`, // Random placeholder image
@@ -57,7 +55,6 @@ const seedDB = async () => {
     await camp.save(); // Save campground to the database
   }
 };
-
 
 // =============== Run Seeder and Close DB ===============
 // Call the seeding function, then close the database connection

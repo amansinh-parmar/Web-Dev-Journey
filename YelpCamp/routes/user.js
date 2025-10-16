@@ -7,7 +7,6 @@ const catchAsync = require("../utilities/catchAsync"); // Async error handler
 const passport = require("passport"); // For user authentication
 const { storeReturnTo } = require("../middleware"); // Custom middleware to store intended redirect path
 
-
 // ================== Routes ==================
 
 // ========== GET /register ==========
@@ -15,7 +14,6 @@ const { storeReturnTo } = require("../middleware"); // Custom middleware to stor
 router.get("/register", (req, res) => {
   res.render("users/register"); // Renders views/users/register.ejs
 });
-
 
 // ========== POST /register ==========
 // Handle user registration logic
@@ -46,13 +44,11 @@ router.post(
   })
 );
 
-
 // ========== GET /login ==========
 // Show the login form
 router.get("/login", (req, res) => {
   res.render("users/login"); // Renders views/users/login.ejs
 });
-
 
 // ========== POST /login ==========
 // Handle user login logic
@@ -76,7 +72,6 @@ router.post(
   }
 );
 
-
 // ========== GET /logout ==========
 // Handle user logout
 router.get("/logout", (req, res) => {
@@ -86,10 +81,9 @@ router.get("/logout", (req, res) => {
       return next(err); // If error during logout, forward to error handler
     }
     req.flash("success", "Goodbye!"); // Flash logout message
-    res.redirect("/campground"); // Redirect to home or campgrounds
+    res.redirect("/campgrounds"); // Redirect to home or campgrounds
   });
 });
-
 
 // ========== Export Router ==========
 module.exports = router;

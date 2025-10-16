@@ -10,6 +10,7 @@ const Review = require("../models/review");
 
 // Joi validation schema for reviews
 const { reviewSchema } = require("../schemas");
+const { validReview, isLoggedIn } = require("../middleware");
 
 // Custom utility to handle async/await errors
 const catchAsync = require("../utilities/catchAsync");
@@ -17,19 +18,7 @@ const catchAsync = require("../utilities/catchAsync");
 // Custom error handler class
 const ExpressError = require("../utilities/ExpressError");
 
-
 // =============== Middleware to Validate Review Input ===============
-const validReview = (req, res, next) => {
-  const { error } = reviewSchema.validate(req.body); // Validate review form data
-  if (error) {
-    // Map all error messages and join them into one string
-    const msg = error.details.map((el) => el.message).join(",");
-    throw new ExpressError(msg, 400); // Throw a formatted custom error
-  } else {
-    next(); // Proceed to next middleware or route handler
-  }
-};
-
 
 // =============== Routes ===============
 
@@ -37,18 +26,20 @@ const validReview = (req, res, next) => {
 // Create and add a new review to a specific campground
 router.post(
   "/",
+  isLoggedIn,
   validReview, // Validate review data using Joi
   catchAsync(async (req, res) => {
     const campground = await Campground.findById(req.params.id); // Get campground by ID
     const review = new Review(req.body.review); // Create new Review instance with form data
+    // review.author = req.user._id; // Get user id from author "For Review"
+    review.author = req.user._id;
     campground.review.push(review); // Add review to campground's review array
     await review.save(); // Save review to DB
     await campground.save(); // Save campground with new review reference
     req.flash("success", "Created new review!!"); // Flash success message
-    res.redirect(`/campground/${campground._id}`); // Redirect to the campground's show page
+    res.redirect(`/campgrounds/${campground._id}`); // Redirect to the campground's show page
   })
 );
-
 
 // ========== DELETE /campground/:id/review/:reviewId ==========
 // Delete a review from both the reviews collection and the campground's reference array
@@ -65,10 +56,9 @@ router.delete(
     await Review.findByIdAndDelete(reviewId);
 
     req.flash("success", "Successfully deleted review!");
-    res.redirect(`/campground/${id}`); // Redirect back to the campground's show page
+    res.redirect(`/campgrounds/${id}`); // Redirect back to the campground's show page
   })
 );
-
 
 // =============== Export Router ===============
 // This router is mounted in app.js under: app.use("/campground/:id/review", reviewRoutes);
