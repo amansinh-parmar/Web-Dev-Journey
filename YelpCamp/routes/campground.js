@@ -24,30 +24,21 @@ const upload = multer({ storage });
 // =============== Routes ===============
 
 // =============== Easy Way To Write Routes ===============
-router.route("/").get(catchAsync(campground.index)).post(
-  isLoggedIn,
-  validateCampground,
-  upload.array("image"),
-  // also use "single" to get Single Image and "array" to get multiple images
-  catchAsync(campground.createCampground)
-);
+router.route("/")
+.get(catchAsync(campground.index))
+.post(isLoggedIn,upload.array("image"),validateCampground,catchAsync(campground.createCampground));
+// also use "single" to get Single Image and "array" to get multiple images
 
 router.get("/new", isLoggedIn, campground.randerNewForm);
 
-router.route("/:id").get(catchAsync(campground.showCampground)).put(
-  isLoggedIn, // Protect route
-  upload.array("image"),
-  isAuthor,
-  validateCampground, // Validate updated data
-  catchAsync(campground.updateCampground)
-);
+router.route("/:id")
+.get(catchAsync(campground.showCampground))
+.put(isLoggedIn, isAuthor,upload.array("image"),validateCampground,catchAsync(campground.updateCampground))
+.delete(isLoggedIn,isAuthor,catchAsync(campground.deleteCampground))
 
-router.get(
-  "/:id/edit",
-  isLoggedIn,
-  isAuthor, // Only logged-in users can edit
-  catchAsync(campground.randerEditForm)
-);
+router.get("/:id/edit",isLoggedIn,isAuthor, catchAsync(campground.randerEditForm));
+
+
 module.exports = router;
 
 // ================ "COMPLEX METHOD" ================

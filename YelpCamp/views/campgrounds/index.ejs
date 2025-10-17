@@ -20,48 +20,51 @@
             <div class="card mb-2 col-9">
                 <div class="row g-0 align-items-center"> <!-- Row with no gutters and vertically aligned -->
 
-                    <!-- Image section of the card -->
-                    <div class="col-md-4">
-                        <!-- <img src="<%= campground.images[1].url %>" class="img-fluid rounded-start"
-                            style="height: 300px; object-fit: cover;" alt="<%= campground.title %>"> -->
-                        <img src="<%= campground.images[1]?.url || campground.images[0]?.url || '/images/placeholder.jpg' %>"
-                            class="img-fluid rounded-start" style="height: 300px; object-fit: cover;"
-                            alt="<%= campground.title %>">
+                    <% if (campground.images && campground.images.length> 0) { %>
+                        <!-- Image section of the card -->
+                        <div class="col-md-4">
+                            <img src="<%=campground.images[0].url%>" class="img-fluid rounded-start"
+                                style="height: 300px; object-fit: cover;" alt="<%= campground.title %>">
+                            <% } else { %>
+                                <img src="https://via.placeholder.com/400x300?text=No+Image"
+                                    class="img-fluid rounded-start" style="height: 300px; object-fit: cover;"
+                                    alt="No image available">
+                                <% } %>
 
+                        </div>
 
                         <!-- 
                       - src: shows the campground’s image URL
                       - alt: accessibility, shows title if image fails
                       - object-fit: cover keeps the image aspect ratio while filling the box 
                     -->
-                    </div>
 
-                    <!-- Content section of the card -->
-                    <div class="col-md-8">
-                        <div class="card-body p-4">
-                            <!-- Campground title -->
-                            <h5 class="card-title mb-1">
-                                <%= campground.title %>
-                            </h5>
+                        <!-- Content section of the card -->
+                        <div class="col-md-8">
+                            <div class="card-body p-4">
+                                <!-- Campground title -->
+                                <h5 class="card-title mb-1">
+                                    <%= campground.title %>
+                                </h5>
 
-                            <!-- Short description -->
-                            <p class="card-text mb-1">
-                                <%= campground.description %>
-                            </p>
+                                <!-- Short description -->
+                                <p class="card-text mb-1">
+                                    <%= campground.description %>
+                                </p>
 
-                            <!-- Location of the campground, smaller and muted text -->
-                            <p class="card-text mb-2">
-                                <small class="text-muted">
-                                    <%= campground.location %>
-                                </small>
-                            </p>
+                                <!-- Location of the campground, smaller and muted text -->
+                                <p class="card-text mb-2">
+                                    <small class="text-muted">
+                                        <%= campground.location %>
+                                    </small>
+                                </p>
 
-                            <!-- Button linking to the individual campground’s page -->
-                            <a class="btn btn-primary btn-sm" href="/campgrounds/<%= campground._id %>">
-                                View <%= campground.title %>
-                            </a>
+                                <!-- Button linking to the individual campground’s page -->
+                                <a class="btn btn-primary btn-sm" href="/campgrounds/<%= campground._id %>">
+                                    View <%= campground.title %>
+                                </a>
+                            </div>
                         </div>
-                    </div>
 
                 </div>
             </div>

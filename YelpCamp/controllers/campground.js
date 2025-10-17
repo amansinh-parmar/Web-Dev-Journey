@@ -24,6 +24,9 @@ module.exports.createCampground = async (req, res, next) => {
   }));
   campground.author = req.user._id; // Get user id from author for 'Campground'
   await campground.save(); // Save to MongoDB
+  console.log("Uploaded files:", req.files);
+  console.log("Campground images:", campground.images);
+
   console.log(campground);
   req.flash("success", "Successfully made a new campground!!");
   res.redirect(`/campgrounds/${campground._id}`); // Redirect to show page
@@ -62,12 +65,13 @@ module.exports.updateCampground = async (req, res) => {
     ...req.body.campground,
   });
   // Take those user images and store in array in filename folder
-  const imgs = req.files.map((f) => ({
-    url: f.path,
-    filename: f.filename,
-  })); 
+  const imgs = req.files.map((f) => ({ url: f.path, filename: f.filename }));
   campground.images.push(...imgs);
   await campground.save();
+
+  console.log("Uploaded files:", req.files);
+  console.log("Campground images:", campground.images);
+
   req.flash("success", "Successfully updated campground!!");
   res.redirect(`/campgrounds/${campground._id}`); // Redirect to updated campground page
 };
