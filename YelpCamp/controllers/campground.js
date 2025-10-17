@@ -17,8 +17,14 @@ module.exports.randerNewForm = (req, res) => {
 module.exports.createCampground = async (req, res, next) => {
   // Create new campground using submitted form data
   const campground = new Campground(req.body.campground);
+  // Take those user images and store in array in filename folder
+  campground.images = req.files.map((f) => ({
+    url: f.path,
+    filename: f.filename,
+  }));
   campground.author = req.user._id; // Get user id from author for 'Campground'
   await campground.save(); // Save to MongoDB
+  console.log(campground);
   req.flash("success", "Successfully made a new campground!!");
   res.redirect(`/campgrounds/${campground._id}`); // Redirect to show page
 };
@@ -41,7 +47,6 @@ module.exports.showCampground = async (req, res) => {
 module.exports.randerEditForm = async (req, res) => {
   const { id } = req.params;
   const campground = await Campground.findById(id);
-
   if (!campground) {
     req.flash("error", "Cannot find that campground!");
     return res.redirect("/campgrounds");
@@ -56,6 +61,13 @@ module.exports.updateCampground = async (req, res) => {
   const campground = await Campground.findByIdAndUpdate(id, {
     ...req.body.campground,
   });
+  // Take those user images and store in array in filename folder
+  const imgs = req.files.map((f) => ({
+    url: f.path,
+    filename: f.filename,
+  })); 
+  campground.images.push(...imgs);
+  await campground.save();
   req.flash("success", "Successfully updated campground!!");
   res.redirect(`/campgrounds/${campground._id}`); // Redirect to updated campground page
 };

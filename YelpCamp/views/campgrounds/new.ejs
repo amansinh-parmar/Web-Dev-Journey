@@ -11,7 +11,8 @@
         <div class="col-5 offset-4">
             <!-- Center the form with Bootstrap grid (5 columns wide, offset by 4) -->
 
-            <form class="pt-20 validated-form" action="/campgrounds" method="post" novalidate>
+            <form class="pt-20 validated-form" action="/campgrounds" method="post" enctype="multipart/form-data"
+                novalidate>
                 <!-- 
           The form for creating a new campground:
           - action="/campground" means form data posts to this route on server
@@ -38,14 +39,6 @@
                     </div>
                 </div>
 
-                <!-- Image URL input -->
-                <div class="mb-2">
-                    <label class="form-label" for="image">Image URL</label>
-                    <input class="form-control" type="text" name="campground[image]" id="image" required>
-                    <div class="valid-feedback">
-                        Looks good!
-                    </div>
-                </div>
 
                 <!-- Price input with Bootstrap input group for currency symbol -->
                 <div class="mb-2">
@@ -60,6 +53,21 @@
                     </div>
                 </div>
 
+                <!-- Image URL input -->
+                <div class="mb-3 custom-file">
+                    <label for="formFileMultiple custom-file" class="form-label">Upload Images</label>
+                    <input class="form-control" type="file" id="formFileMultiple" multiple required>
+                </div>
+                <!-- <input type="file" name="image" id="" multiple> -->
+                <!-- <div class="mb-2">
+                    <label class="form-label" for="image">Image URL</label>
+                    <input class="form-control" type="text" name="campground[image]" id="image" required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                </div> -->
+
+
                 <!-- Description textarea -->
                 <div class="mb-4">
                     <label class="form-label" for="description">Description</label>
@@ -68,6 +76,7 @@
                         Looks good!
                     </div>
                 </div>
+
 
                 <!-- Submit button -->
                 <div class="mb-3">

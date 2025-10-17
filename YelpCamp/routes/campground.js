@@ -15,24 +15,28 @@ const Campground = require("../models/campground");
 const { isLoggedIn, validateCampground, isAuthor } = require("../middleware");
 
 const campground = require("../controllers/campground");
+
+const multer = require("multer");
+const { storage } = require("../cloudinary");
+const upload = multer({ storage });
 // =============== Validation Middleware ===============
 
 // =============== Routes ===============
 
 // =============== Easy Way To Write Routes ===============
-router
-  .route("/")
-  .get(catchAsync(campground.index))
-  .post(
-    isLoggedIn,
-    validateCampground,
-    catchAsync(campground.createCampground)
-  );
+router.route("/").get(catchAsync(campground.index)).post(
+  isLoggedIn,
+  validateCampground,
+  upload.array("image"),
+  // also use "single" to get Single Image and "array" to get multiple images
+  catchAsync(campground.createCampground)
+);
 
 router.get("/new", isLoggedIn, campground.randerNewForm);
 
 router.route("/:id").get(catchAsync(campground.showCampground)).put(
   isLoggedIn, // Protect route
+  upload.array("image"),
   isAuthor,
   validateCampground, // Validate updated data
   catchAsync(campground.updateCampground)
@@ -44,13 +48,9 @@ router.get(
   isAuthor, // Only logged-in users can edit
   catchAsync(campground.randerEditForm)
 );
-
 module.exports = router;
 
-
-
 // ================ "COMPLEX METHOD" ================
-
 
 // // ========== GET /campground ==========
 // // Show all campgrounds (main listing page)

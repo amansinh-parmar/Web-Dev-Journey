@@ -6,6 +6,7 @@
 (() => {
   "use strict"; // Enforce stricter parsing and error handling in JavaScript
 
+  bsCustomFileInput.init();
   // Select all forms that need Bootstrap custom validation
   const forms = document.querySelectorAll(".validated-form");
 
