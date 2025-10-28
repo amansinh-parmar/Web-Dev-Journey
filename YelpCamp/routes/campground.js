@@ -18,21 +18,19 @@ const campground = require("../controllers/campground");
 
 const multer = require("multer");
 const { storage } = require("../cloudinary");
-const upload = multer({ dest: storage });
+const upload = multer({ storage });
 // =============== Validation Middleware ===============
 
 // =============== Routes ===============
 
 // =============== Easy Way To Write Routes ===============
-router
-  .route("/")
-  .get(catchAsync(campground.index))
-  .post(
-    isLoggedIn,
-    upload.array("image"),
-    validateCampground,
-    catchAsync(campground.createCampground)
-  );
+router.route("/").get(catchAsync(campground.index))
+.post(
+  isLoggedIn,
+  upload.array("images"),
+  validateCampground,
+  catchAsync(campground.createCampground)
+);
 // also use "single" to get Single Image and "array" to get multiple images
 
 router.get("/new", isLoggedIn, campground.randerNewForm);
@@ -43,7 +41,7 @@ router
   .put(
     isLoggedIn,
     isAuthor,
-    upload.array("image"),
+    upload.array("images"),
     validateCampground,
     catchAsync(campground.updateCampground)
   )

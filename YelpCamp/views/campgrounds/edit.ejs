@@ -1,4 +1,4 @@
-    <% layout('layouts/boilerplate') %>
+<% layout('layouts/boilerplate') %>
     <!-- 
   Extends the base layout 'boilerplate.ejs' using 'ejs-mate'.
   This keeps site-wide styling and markup consistent.
@@ -61,7 +61,8 @@
                 <div class="mb-3 custom-file">
                     <div class="form-file custom-file">
                         <label for="formFileMultiple custom-file" class="form-label">Add More Images</label>
-                        <input class="form-control" type="file" id="formFileMultiple" multiple required>
+                        <input class="form-control" type="file" id="images" name="images" multiple>
+                        <!-- <input class="form-control" type="file" id="formFileMultiple" multiple required> -->
                     </div>
                 </div>
 
@@ -74,6 +75,17 @@
                     <div class="valid-feedback">
                         Looks good!
                     </div>
+                </div>
+
+                <div class="mb-3">
+                    <% campground.images.forEach(function(img, i) { %>
+                        <img src="<%= img.thumbnail %>" class="img-thumbnail" alt="">
+                        <div class="form-check-inline">
+                            <input type="checkbox" id="image-<%= i %>" name="deleteImages[]"
+                                value="<%= img.filename %>">
+                        </div>
+                        <label for="image-<%= i %>">Delete?</label>
+                        <% }) %>
                 </div>
 
                 <!-- Submit button -->

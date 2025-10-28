@@ -1,14 +1,25 @@
 // =============== Import Mongoose & Review Model ===============
 const mongoose = require("mongoose");
 const Review = require("./review"); // Required to delete reviews when a campground is deleted
+const { func } = require("joi");
 
 // Extract Schema class from mongoose (for cleaner code)
 const Schema = mongoose.Schema;
 
 // =============== Define Campground Schema ===============
+const ImageSchema = new Schema({
+  url: String,
+  filename: String,
+});
+
+ImageSchema.virtual("thumbnail").get(function () {
+  return this.url.replace("/upload", "/upload/w_250");
+});
+
 const CampgroundSchema = new Schema({
   title: String, // Name of the campground
-  images: [{ url: String, filename: String }],
+  images: [ImageSchema],
+  // images: [{ url: String, filename: String }],
   price: Number, // Price per night
   description: String, // Description of the campground
   location: String, // Location of the campground

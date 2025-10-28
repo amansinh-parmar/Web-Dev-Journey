@@ -1,5 +1,6 @@
 // =============== Import Required Modules ===============
 const Campground = require("../models/campground");
+const { cloudinary } = require("../cloudinary");
 
 // =============== Controller for Campground to export for routes and routes export for app.js ===============
 // =============== Index Router ===============
@@ -30,6 +31,8 @@ module.exports.createCampground = async (req, res, next) => {
   console.log(campground);
   req.flash("success", "Successfully made a new campground!!");
   res.redirect(`/campgrounds/${campground._id}`); // Redirect to show page
+  console.log("Request body:", req.body);
+  console.log("Request files:", req.files);
 };
 
 // =============== Render Show Campground Template ===============
@@ -68,6 +71,15 @@ module.exports.updateCampground = async (req, res) => {
   const imgs = req.files.map((f) => ({ url: f.path, filename: f.filename }));
   campground.images.push(...imgs);
   await campground.save();
+  if (req.body.deleteImages) {
+    for (let filename of req.body.deleteImages) {
+      await cloudinary.uploader.destroy(filename);
+    } 
+    await campground.updateOne({
+      $pull: { images: { filename: { $in: req.body.deleteImages } } },
+    });
+    console.log(campground);
+  }
 
   console.log("Uploaded files:", req.files);
   console.log("Campground images:", campground.images);
