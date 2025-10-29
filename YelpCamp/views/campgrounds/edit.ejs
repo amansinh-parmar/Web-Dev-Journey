@@ -5,10 +5,9 @@
 -->
 
     <div class="row">
-        <h1 class="text-center mb-5">Edit Campground</h1>
         <!-- Page heading -->
-
-        <div class="col-5 offset-4">
+        <div class="col-md-4 offset-md-4">
+            <h1 class="text-center mb-2">Edit Campground</h1>
             <!-- Center the form with Bootstrap grid -->
 
             <form action="/campgrounds/<%= campground._id %>?_method=PUT" method="post" enctype="multipart/form-data"
@@ -23,7 +22,7 @@
         -->
 
                 <!-- Title input pre-filled with existing campground data -->
-                <div class="mb-2">
+                <div class="mb-1">
                     <label class="form-label" for="title">Title</label>
                     <input class="form-control" required type="text" name="campground[title]" id="title"
                         value="<%= campground.title %>">
@@ -33,7 +32,7 @@
                 </div>
 
                 <!-- Location input pre-filled -->
-                <div class="mb-2">
+                <div class="mb-1">
                     <label class="form-label" for="location">Location</label>
                     <input class="form-control" type="text" name="campground[location]" id="location"
                         value="<%= campground.location %>" required>
@@ -43,7 +42,7 @@
                 </div>
 
                 <!-- Price input pre-filled, includes currency symbol -->
-                <div class="mb-2">
+                <div class="mb-1">
                     <label class="form-label" for="price">Campground Price</label>
                     <div class="input-group">
                         <span class="input-group-text" id="basic-addon1">$</span>
@@ -58,7 +57,7 @@
 
 
                 <!-- Upload Image input pre-filled -->
-                <div class="mb-3 custom-file">
+                <div class="mb-2 custom-file">
                     <div class="form-file custom-file">
                         <label for="formFileMultiple custom-file" class="form-label">Add More Images</label>
                         <input class="form-control" type="file" id="images" name="images" multiple>
@@ -68,7 +67,7 @@
 
 
                 <!-- Description textarea pre-filled -->
-                <div class="mb-4">
+                <div class="mb-2">
                     <label class="form-label" for="description">Description</label>
                     <textarea class="form-control" name="campground[description]" id="description"
                         required><%= campground.description %></textarea>
@@ -90,12 +89,14 @@
 
                 <!-- Submit button -->
                 <div class="mb-2">
-                    <button class="btn btn-info">Update Campground</button>
+                    <button class="btn btn-info btn-block w-100">Update Campground</button>
                 </div>
 
             </form>
 
             <!-- Link to go back to all campgrounds -->
-            <a href="/campgrounds">Back to all campground</a>
+            <div class="text-center">
+                <a href="/campgrounds">Back to all campground</a>
+            </div>
         </div>
     </div>

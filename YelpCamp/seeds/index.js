@@ -16,7 +16,7 @@ const { places, descriptors } = require("./seedHelpers");
 const Campground = require("../models/campground");
 
 // Connect to the local MongoDB database
-mongoose.connect("mongodb://127.0.0.1:27017/yelp-camp", {
+mongoose.connect("mongodb://127.0.0.1:27017/yelp-camp-maptiler", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -43,8 +43,16 @@ const seedDB = async () => {
 
     // Create new campground object with random data
     const camp = new Campground({
-      author: "68ef8813ba23f5cc79ff2582",
+      // author: "68ef8813ba23f5cc79ff2582",
+      author: "",
       location: `${cities[randomIndex].city}, ${cities[randomIndex].state}`, // Random city, state
+      geometry: {
+        type: "Point",
+        coordinates: [
+          cities[random1000].longitude,
+          cities[random1000].latitude,
+        ],
+      },
       title: `${sample(descriptors)} ${sample(places)}`, // Random campground name
       // image: `https://picsum.photos/400?random=${Math.random()}`, // Random placeholder image
       description:

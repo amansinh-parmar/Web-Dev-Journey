@@ -1,5 +1,5 @@
 if (process.env.NODE_ENV !== "production") {
-  require("dotenv").config();
+  require("dotenv").config({ quiet: true });
 }
 
 // =============== Import Required Modules ===============
@@ -40,7 +40,7 @@ const campground = require("./models/campground");
 const review = require("./models/review");
 
 // Connect to local MongoDB server & database "yelp-camp"
-mongoose.connect("mongodb://127.0.0.1:27017/yelp-camp");
+mongoose.connect("mongodb://127.0.0.1:27017/yelp-camp-maptiler");
 
 // Check for successful or failed database connection
 const db = mongoose.connection;

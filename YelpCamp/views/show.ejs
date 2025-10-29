@@ -4,11 +4,11 @@
 
 
 
-    <div class="row">
-        <div class="col-7 row g-0">
+    <div class="row" style="justify-content: space-around; margin: 0; margin-top: 40px;">
+        <div class="col-5 row g-0">
 
-            <div id="campgroundCarousel" class="carousel slide" data-ride="carousel">
-                <div class="carousel-inner">
+            <div id="campgroundCarousel" class="carousel slide " data-ride="carousel">
+                <div class="carousel-inner" >
                     <% campground.images.forEach((img, i)=> { %>
                         <div class="carousel-item <%= i === 0 ? 'active' : '' %>">
                             <img src="<%= img.url %>" class="d-block w-100" alt="">
@@ -71,10 +71,16 @@
                             2 days ago
                             <!-- Static footer, could be enhanced to show actual created/updated time -->
                         </div>
+                        <!-- Link back to all campgrounds -->
+                        <a href="/campgrounds">Back to all campgrounds</a>
+
             </div>
         </div>
 
-        <div class="col-4">
+        <div class="col-6" style="margin-left: 40px;">
+            <!-- <div id="map" style="width: 100%; height: 300px;"></div> -->
+            <div id="map"></div>
+
             <% if(currentUser){ %>
                 <h2>Leave a Review</h2>
                 <!-- Form for submitting a new review for this campground -->
@@ -118,34 +124,43 @@
                     <button class="btn btn-success" type="submit">Submit</button>
                 </form>
                 <% } %>
-
-                    <!-- Loop through each existing review to display them -->
-                    <% for(let review of campground.review){ %>
-                        <div class="card mb-3">
-                            <div class="card-body">
-                                <h5 class="card-title">
-                                    <%= review.author.username %>
-                                </h5>
-                                <p class="starability-result" data-rating=<%=review.rating %>>
-                                    Rated: <%= review.rating %> stars
-                                </p>
-                                <!-- <h6 class="card-subtitle mb-2 text-body-secondary">By - <%= review.author.username %>
+                    <div>
+                        <!-- Loop through each existing review to display them -->
+                        <% for(let review of campground.review){ %>
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <%= review.author.username %>
+                                    </h5>
+                                    <p class="starability-result" data-rating=<%=review.rating %>>
+                                        Rated: <%= review.rating %> stars
+                                    </p>
+                                    <!-- <h6 class="card-subtitle mb-2 text-body-secondary">By - <%= review.author.username %>
                                 </h6> -->
-                                <p class="card-text">Review: <%= review.body %>
-                                </p>
-                                <!-- Button/form to delete individual review -->
-                                <% if(currentUser && review.author.equals(currentUser._id)){ %>
-                                    <form
-                                        action="/campgrounds/<%= campground._id %>/review/<%= review._id %>?_method=DELETE"
-                                        method="post">
-                                        <button class="btn btn-sm btn-danger">Delete</button>
-                                    </form>
-                                    <% } %>
+                                    <p class="card-text">Review: <%= review.body %>
+                                    </p>
+                                    <!-- Button/form to delete individual review -->
+                                    <% if(currentUser && review.author.equals(currentUser._id)){ %>
+                                        <form
+                                            action="/campgrounds/<%= campground._id %>/review/<%= review._id %>?_method=DELETE"
+                                            method="post">
+                                            <button class="btn btn-sm btn-danger">Delete</button>
+                                        </form>
+                                        <% } %>
+                                </div>
                             </div>
-                        </div>
-                        <% } %>
-
-                            <!-- Link back to all campgrounds -->
-                            <a href="/campgrounds">Back to all campgrounds</a>
+                            <% } %>
+                    </div>
         </div>
     </div>
+
+
+    <link href="https://cdn.maptiler.com/maptiler-sdk-js/v1.3.1/maptiler-sdk.css" rel="stylesheet" />
+    <script src="https://cdn.maptiler.com/maptiler-sdk-js/v1.3.1/maptiler-sdk.umd.js"></script>
+
+    <script>
+        const maptilerApiKey = "<%= process.env.MAPTILER_API_KEY %>";
+        const campground = <%- JSON.stringify(campground) %>;
+    </script>
+
+    <script src="/Javascript/showPageMap.js"></script>

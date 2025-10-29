@@ -2,6 +2,10 @@
 const Campground = require("../models/campground");
 const { cloudinary } = require("../cloudinary");
 
+// =============== Use 'MAPTILR' for getting geometry coordinates ===============
+const maptilerClient = require("@maptiler/client");
+maptilerClient.config.apiKey = process.env.MAPTILER_API_KEY;
+
 // =============== Controller for Campground to export for routes and routes export for app.js ===============
 // =============== Index Router ===============
 module.exports.index = async (req, res) => {
@@ -16,8 +20,27 @@ module.exports.randerNewForm = (req, res) => {
 
 // =============== Create New Router ===============
 module.exports.createCampground = async (req, res, next) => {
+  // Getting geometry coordinates
+  const geoData = await maptilerClient.geocoding.forward(
+    req.body.campground.location,
+    { limit: 1 }
+  );
+  console.log(geoData);
+  if (!geoData.features?.length) {
+    req.flash(
+      "error",
+      "Could not geocode that location. Please try again and enter a valid location."
+    );
+    return res.redirect("/campgrounds/new");
+  }
+
   // Create new campground using submitted form data
   const campground = new Campground(req.body.campground);
+
+  // Geometry and Location
+  campground.geometry = geoData.features[0].geometry;
+  campground.location = geoData.features[0].place_name;
+
   // Take those user images and store in array in filename folder
   campground.images = req.files.map((f) => ({
     url: f.path,
@@ -63,18 +86,41 @@ module.exports.randerEditForm = async (req, res) => {
 // =============== Update Campground ===============
 module.exports.updateCampground = async (req, res) => {
   const { id } = req.params;
+
+  // Change Location
+  const geoData = await maptilerClient.geocoding.forward(
+    req.body.campground.location,
+    { limit: 1 }
+  );
+  console.log(geoData);
+  // console.log(geoData);
+  if (!geoData.features?.length) {
+    req.flash(
+      "error",
+      "Could not geocode that location. Please try again and enter a valid location."
+    );
+    return res.redirect(`/campgrounds/${id}/edit`);
+  }
+
   // Use spread operator to update campground fields
   const campground = await Campground.findByIdAndUpdate(id, {
     ...req.body.campground,
   });
+
+  // Update Geometry and Location
+  campground.geometry = geoData.features[0].geometry;
+  campground.location = geoData.features[0].place_name;
+
   // Take those user images and store in array in filename folder
   const imgs = req.files.map((f) => ({ url: f.path, filename: f.filename }));
   campground.images.push(...imgs);
+
   await campground.save();
+
   if (req.body.deleteImages) {
     for (let filename of req.body.deleteImages) {
       await cloudinary.uploader.destroy(filename);
-    } 
+    }
     await campground.updateOne({
       $pull: { images: { filename: { $in: req.body.deleteImages } } },
     });

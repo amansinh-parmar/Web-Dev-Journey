@@ -6,6 +6,7 @@ const { func } = require("joi");
 // Extract Schema class from mongoose (for cleaner code)
 const Schema = mongoose.Schema;
 
+
 // =============== Define Campground Schema ===============
 const ImageSchema = new Schema({
   url: String,
@@ -16,6 +17,9 @@ ImageSchema.virtual("thumbnail").get(function () {
   return this.url.replace("/upload", "/upload/w_250");
 });
 
+
+const opts = { toJSON: { virtuals: true } };
+
 const CampgroundSchema = new Schema({
   title: String, // Name of the campground
   images: [ImageSchema],
@@ -23,6 +27,18 @@ const CampgroundSchema = new Schema({
   price: Number, // Price per night
   description: String, // Description of the campground
   location: String, // Location of the campground
+  // =============== Geometry Location Coordinates ===============
+  geometry: {
+    type: {
+      type: String,
+      enum: ["Point"],
+      required: true,
+    },
+    coordinates: {
+      type: [Number],
+      required: true,
+    },
+  },
 
   // =============== Store Author Info ===============
   // 'author' will reference a User who created this campground
@@ -39,6 +55,12 @@ const CampgroundSchema = new Schema({
       ref: "Review", // Reference to the Review model
     },
   ],
+}, opts);
+
+CampgroundSchema.virtual('properties.popUpMarkup').get(function () {
+    return `
+    <strong><a href="/campgrounds/${this._id}">${this.title}</a></strong>
+    <p>${this.description.substring(0, 20)}...</p>`
 });
 
 // =============== Middleware to Delete Related Reviews ===============

@@ -5,14 +5,13 @@
 -->
 
     <div class="row">
-        <h1 class="text-center mb-5">New Campground</h1>
-        <!-- Page heading -->
 
-        <div class="col-5 offset-4">
+        <div class="col-md-4 offset-md-4">
+            <!-- Page heading -->
+            <h1 class="text-center mb-3">New Campground</h1>
             <!-- Center the form with Bootstrap grid (5 columns wide, offset by 4) -->
 
-            <form class="pt-20 validated-form" action="/campgrounds" method="post" enctype="multipart/form-data"
-                novalidate>
+            <form class=" validated-form" action="/campgrounds" method="post" enctype="multipart/form-data" novalidate>
                 <!-- 
           The form for creating a new campground:
           - action="/campground" means form data posts to this route on server
@@ -22,7 +21,7 @@
         -->
 
                 <!-- Title input -->
-                <div class="mb-2">
+                <div class="mb-3">
                     <label class="form-label" for="title">Title</label>
                     <input class="form-control" type="text" name="campground[title]" id="title" required>
                     <div class="valid-feedback">
@@ -31,7 +30,7 @@
                 </div>
 
                 <!-- Location input -->
-                <div class="mb-2">
+                <div class="mb-3">
                     <label class="form-label" for="location">Location</label>
                     <input class="form-control" type="text" name="campground[location]" id="location" required>
                     <div class="valid-feedback">
@@ -53,6 +52,17 @@
                     </div>
                 </div>
 
+
+                <!-- Description textarea -->
+                <div class="mb-2">
+                    <label class="form-label" for="description">Description</label>
+                    <textarea class="form-control" name="campground[description]" id="description" required></textarea>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                </div>
+
+
                 <!-- Image URL input -->
                 <div class="mb-3 custom-file">
                     <label for="formFileMultiple custom-file" class="form-label">Upload Images</label>
@@ -68,25 +78,16 @@
                     </div>
                 </div> -->
 
-
-                <!-- Description textarea -->
-                <div class="mb-4">
-                    <label class="form-label" for="description">Description</label>
-                    <textarea class="form-control" name="campground[description]" id="description" required></textarea>
-                    <div class="valid-feedback">
-                        Looks good!
-                    </div>
-                </div>
-
-
                 <!-- Submit button -->
                 <div class="mb-3">
-                    <button class="btn btn-success">Add Campground</button>
+                    <button class="btn btn-success btn-block w-100">Add Campground</button>
                 </div>
 
             </form>
 
             <!-- Link back to all campgrounds -->
-            <a href="/campgrounds">Back to all campground</a>
+            <div class="text-center">
+                <a href="/campgrounds">Back to all campground</a>
+            </div>
         </div>
     </div>
