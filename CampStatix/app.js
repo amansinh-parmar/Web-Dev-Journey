@@ -32,21 +32,30 @@ const campgroundRoutes = require("./routes/campground");
 const reviewRoutes = require("./routes/reviews");
 const userRoutes = require("./routes/user");
 
-// =============== Connect to MongoDB ===============
-const mongoose = require("mongoose");
-
 const sanitizeV5 = require("./utilities/mongoSanitizeV5");
 
 const helmet = require("helmet");
 
+// =============== Connect to MongoDB ===============
+const mongoose = require("mongoose");
+
+const dbUrl = process.env.DB_URL;
+
 // Connect to local MongoDB server & database "yelp-camp"
-mongoose.connect("mongodb://127.0.0.1:27017/yelp-camp-maptiler");
+// "mongodb://127.0.0.1:27017/yelp-camp-maptiler"
 
 // Check for successful or failed database connection
+
+// mongoose.connect(dbUrl, {
+mongoose.connect("mongodb://127.0.0.1:27017/yelp-camp-maptiler", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
 const db = mongoose.connection;
-db.on("error", console.error.bind(console, "connection error:"));
+db.on("error", console.error.bind(console, "MongoDB Connection ERROR!!"));
 db.once("open", () => {
-  console.log("Database Connected!!");
+  console.log("MongoDB Connected Successfully!!");
 });
 
 // =============== Set Up Express Middleware ===============
