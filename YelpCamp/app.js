@@ -5,6 +5,7 @@ if (process.env.NODE_ENV !== "production") {
 // =============== Import Required Modules ===============
 const express = require("express");
 const app = express();
+app.set("query parser", "extended");
 const path = require("path");
 
 // Session and flash messages for storing user sessions and showing temporary messages
@@ -39,6 +40,11 @@ const mongoose = require("mongoose");
 const campground = require("./models/campground");
 const review = require("./models/review");
 
+const sanitizeV5 = require("./utilities/mongoSanitizeV5");
+
+const helmet = require("helmet");
+const { object } = require("joi");
+
 // Connect to local MongoDB server & database "yelp-camp"
 mongoose.connect("mongodb://127.0.0.1:27017/yelp-camp-maptiler");
 
@@ -50,6 +56,8 @@ db.once("open", () => {
 });
 
 // =============== Set Up Express Middleware ===============
+
+app.set("query parser", "extended");
 
 // Set view engine to EJS for rendering HTML
 app.set("view engine", "ejs");
@@ -65,19 +73,65 @@ app.use(methodOverride("_method"));
 // Serve static files from 'public' directory (like CSS, JS, images)
 app.use(express.static(path.join(__dirname, "public")));
 
+// To remove data using these defaults:
+app.use(sanitizeV5({ replaceWith: "_" }));
+
 // =============== Session Configuration ===============
 const sessionConfig = {
+  name: "session",
   secret: "ThisShouldBeBetterSecret", // secret key for signing the session ID cookie
   resave: false, // don't save session if not modified
   saveUninitialized: true, // save uninitialized sessions (helpful for login/logout flow)
   cookie: {
     httpOnly: true, // for security: client-side JS can't access the cookie
+    // secure: true,  // for HTTPS for Security
     expires: Date.now() + 1000 * 60 * 60 * 24 * 7, // 1 week from now
     maxAge: 1000 * 60 * 60 * 24 * 7, // maximum age of cookie (1 week)
   },
 };
 app.use(session(sessionConfig)); // Add session middleware to app
 app.use(flash()); // Enable flash messages for alerts (like success/fail messages)
+app.use(helmet({ contentSecurityPolicy: false }));
+
+const scriptSrcUrls = [
+  "https://stackpath.bootstrapcdn.com/",
+  "https://kit.fontawesome.com/",
+  "https://cdnjs.cloudflare.com/",
+  "https://cdn.jsdelivr.net",
+  "https://cdn.maptiler.com/",
+];
+const styleSrcUrls = [
+  "https://kit-free.fontawesome.com/",
+  "https://stackpath.bootstrapcdn.com/",
+  "https://fonts.googleapis.com/",
+  "https://use.fontawesome.com/",
+  "https://cdn.jsdelivr.net",
+  "https://cdn.maptiler.com/",
+];
+const connectSrcUrls = ["https://api.maptiler.com/"];
+
+const fontSrcUrls = [];
+
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: [],
+      connectSrc: ["'self'", ...connectSrcUrls],
+      scriptSrc: ["'unsafe-inline'", "'self'", ...scriptSrcUrls],
+      styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
+      workerSrc: ["'self'", "blob:"],
+      objectSrc: [],
+      imgSrc: [
+        "'self'",
+        "blob:",
+        "data:",
+        "https://res.cloudinary.com/dsveno5v2/",
+        "https://api.maptiler.com/",
+      ],
+      fontSrc: ["'self'", ...fontSrcUrls],
+    },
+  })
+);
 
 // =============== Passport Authentication Setup ===============
 app.use(passport.initialize()); // Initialize passport
@@ -93,7 +147,8 @@ passport.deserializeUser(User.deserializeUser()); // Remove user from session
 // =============== Flash Message Middleware ===============
 // Middleware to pass user & flash message info to ALL templates
 app.use((req, res, next) => {
-  console.log(req.session); // Optional: logs current session data
+  console.log(req.query);
+  // console.log(req.session); // Optional: logs current session data
   res.locals.currentUser = req.user; // Makes 'currentUser' available in templates
   res.locals.success = req.flash("success"); // Pass success messages
   res.locals.error = req.flash("error"); // Pass error messages

@@ -24,7 +24,7 @@ module.exports.register = async (req, res, next) => {
       if (err) return next(err);
       console.log(registerUser);
       req.flash("success", "Welcome to YelpCamp!"); // Flash welcome message
-      res.redirect("/campground"); // Redirect to campground listing
+      res.redirect("/campgrounds"); // Redirect to campground listing
     });
   } catch (err) {
     req.flash("error", err.message); // Show error message (e.g., duplicate username)
