@@ -5,7 +5,6 @@ if (process.env.NODE_ENV !== "production") {
 // =============== Import Required Modules ===============
 const express = require("express");
 const app = express();
-app.set("query parser", "extended");
 const path = require("path");
 
 // Session and flash messages for storing user sessions and showing temporary messages
@@ -36,14 +35,9 @@ const userRoutes = require("./routes/user");
 // =============== Connect to MongoDB ===============
 const mongoose = require("mongoose");
 
-// Import models in case you need them elsewhere in this file
-const campground = require("./models/campground");
-const review = require("./models/review");
-
 const sanitizeV5 = require("./utilities/mongoSanitizeV5");
 
 const helmet = require("helmet");
-const { object } = require("joi");
 
 // Connect to local MongoDB server & database "yelp-camp"
 mongoose.connect("mongodb://127.0.0.1:27017/yelp-camp-maptiler");
@@ -61,15 +55,19 @@ app.set("query parser", "extended");
 
 // Set view engine to EJS for rendering HTML
 app.set("view engine", "ejs");
+
 // Set views directory to 'views' folder
 app.set("views", path.join(__dirname, "views"));
+
 // Use ejs-mate engine for layout support
 app.engine("ejs", ejsMate);
 
 // Parse URL-encoded bodies (used for form data)
 app.use(express.urlencoded({ extended: true }));
+
 // Allow method override (for PUT/DELETE methods in forms)
 app.use(methodOverride("_method"));
+
 // Serve static files from 'public' directory (like CSS, JS, images)
 app.use(express.static(path.join(__dirname, "public")));
 
@@ -91,25 +89,34 @@ const sessionConfig = {
 };
 app.use(session(sessionConfig)); // Add session middleware to app
 app.use(flash()); // Enable flash messages for alerts (like success/fail messages)
-app.use(helmet({ contentSecurityPolicy: false }));
+app.use(helmet());
 
 const scriptSrcUrls = [
   "https://stackpath.bootstrapcdn.com/",
+  // "https://api.tiles.mapbox.com/",
+  // "https://api.mapbox.com/",
   "https://kit.fontawesome.com/",
   "https://cdnjs.cloudflare.com/",
   "https://cdn.jsdelivr.net",
-  "https://cdn.maptiler.com/",
+  "https://cdn.maptiler.com/", // add this
 ];
 const styleSrcUrls = [
   "https://kit-free.fontawesome.com/",
   "https://stackpath.bootstrapcdn.com/",
+  // "https://api.mapbox.com/",
+  // "https://api.tiles.mapbox.com/",
   "https://fonts.googleapis.com/",
   "https://use.fontawesome.com/",
   "https://cdn.jsdelivr.net",
-  "https://cdn.maptiler.com/",
+  "https://cdn.maptiler.com/", // add this
 ];
-const connectSrcUrls = ["https://api.maptiler.com/"];
-
+const connectSrcUrls = [
+  // "https://api.mapbox.com/",
+  // "https://a.tiles.mapbox.com/",
+  // "https://b.tiles.mapbox.com/",
+  // "https://events.mapbox.com/",
+  "https://api.maptiler.com/", // add this
+];
 const fontSrcUrls = [];
 
 app.use(
@@ -125,6 +132,7 @@ app.use(
         "'self'",
         "blob:",
         "data:",
+        "https://images.unsplash.com/",
         "https://res.cloudinary.com/dsveno5v2/",
         "https://api.maptiler.com/",
       ],

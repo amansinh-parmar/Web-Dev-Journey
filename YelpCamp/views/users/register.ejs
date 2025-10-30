@@ -1,23 +1,23 @@
 <% layout('layouts/boilerplate') %>
     <!-- Uses the shared boilerplate layout for consistent look -->
 
-
-
-    <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
-        <div class="col-md-6 col-lg-4">
-            <div class="card shadow">
+    <div class="d-flex justify-content-center align-items-center mt-5">
+        <div class="col-md-4">
+            <div class="card shadow" style="max-width: 540px; width: 100%;">
                 <!-- Card image -->
-                <img src="https://images.unsplash.com/photo-1587547131116-a0655a526190?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1516"
-                    alt="" class="card-img-top" style="max-height: 150px; object-fit: cover;">
+                <!-- <img src="https://images.unsplash.com/photo-1561356762-3dfb83f1869f?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=735"
+                    alt="" class="card-img-top" style="max-height: 250px; object-fit: cover;"> -->
+
+                <img src="/imgs/Register.jpg" alt="" class="card-img-top" style="max-height: 250px; object-fit: cover;">
 
                 <div class="card-body">
-                    <h2 class="card-title">Register</h2>
+                    <h2 class="card-title text-center">Register</h2>
 
                     <!-- Registration form -->
                     <form action="/register" method="post" class="validated-form" novalidate>
 
                         <!-- Username input -->
-                        <div class="mb-2">
+                        <div class="mb-4">
                             <label class="form-label" for="username">Username</label>
                             <input class="form-control" type="text" name="username" id="username" required autofocus>
                             <div class="valid-feedback">
@@ -26,7 +26,7 @@
                         </div>
 
                         <!-- Email input -->
-                        <div class="mb-2">
+                        <div class="mb-4">
                             <label class="form-label" for="email">Email</label>
                             <input class="form-control" type="email" name="email" id="email" required>
                             <div class="valid-feedback">
@@ -35,7 +35,7 @@
                         </div>
 
                         <!-- Password input -->
-                        <div class="mb-2">
+                        <div class="mb-4">
                             <label class="form-label" for="password">Password</label>
                             <input class="form-control" type="password" name="password" id="password" required>
                             <div class="valid-feedback">
