@@ -66,7 +66,7 @@ Adding this overview helps you and other developers quickly understand the organ
 1. **Clone the repo**  
    ```
    git clone https://github.com/yourusername/campstatix.git
-   cd yelp-camp
+   cd campstatix
 ---
 2. **Install dependencies**
 ```
