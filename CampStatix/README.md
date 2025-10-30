@@ -1,6 +1,6 @@
-# 🏕️ Yelp Camp App Project
+# 🏕️ CampStatix App Project
 
-Welcome to **Yelp Camp**, a full-stack web application where users can explore, create, update, and review campgrounds! Whether you’re an outdoor enthusiast or a developer learning full-stack web development, this project has something for you.
+Welcome to **CampStatix**, a full-stack web application where users can explore, create, update, and review campgrounds! Whether you’re an outdoor enthusiast or a developer learning full-stack web development, this project has something for you.
 
 ---
 
@@ -65,7 +65,7 @@ Adding this overview helps you and other developers quickly understand the organ
 
 1. **Clone the repo**  
    ```
-   git clone https://github.com/yourusername/yelp-camp.git
+   git clone https://github.com/yourusername/campstatix.git
    cd yelp-camp
 ---
 2. **Install dependencies**
