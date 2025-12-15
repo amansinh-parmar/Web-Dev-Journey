@@ -1,0 +1,16 @@
+.Self{
+    color: crimson;
+}
+
+.Self:nth-of-type(1){
+    color: blueviolet;
+}
+
+.Self:nth-of-type(2){
+    color:chocolate;
+}
+
+.Self:last-child{
+    color: teal;
+
+}
