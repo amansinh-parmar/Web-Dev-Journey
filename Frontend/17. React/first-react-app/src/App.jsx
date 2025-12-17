@@ -35,61 +35,61 @@
 // // ======================= CODE FOR APP.JSX =======================
 
 
-function App() {
-  const [count, setCount] = useState(0)
+// function App() {
+//   const [count, setCount] = useState(0)
 
-  return (
-    <>
+//   return (
+//     <>
 
-        <ShoppingList items={data}/>
+//         <ShoppingList items={data}/>
 
-        {/* <SelfMotivation/>    */}
+//         {/* <SelfMotivation/>    */}
 
-        {/* FOR PROPS  */}
-        {/* GREETER FILE */}
-        {/* "Props" is to send the Value for 'Greeter.jsx' file */}
-        {/* <Greeter person="Apex" from="Julia"/> */}
-        {/* Set A Default Prop Value If Its Missing*/}
-        {/* <Greeter person="Apex"/> */}
-        {/* <Greeter person="Amanada" from="Amax"/> */}
-        {/* <Greeter from="Amax"/> */}
+//         {/* FOR PROPS  */}
+//         {/* GREETER FILE */}
+//         {/* "Props" is to send the Value for 'Greeter.jsx' file */}
+//         {/* <Greeter person="Apex" from="Julia"/> */}
+//         {/* Set A Default Prop Value If Its Missing*/}
+//         {/* <Greeter person="Apex"/> */}
+//         {/* <Greeter person="Amanada" from="Amax"/> */}
+//         {/* <Greeter from="Amax"/> */}
 
-        {/* DICE ROLL FILE */}
-        {/* <Dice numSide={20}/>
-        <Dice numSide={6}/>
-        <Dice numSide={10}/> */}
+//         {/* DICE ROLL FILE */}
+//         {/* <Dice numSide={20}/>
+//         <Dice numSide={6}/>
+//         <Dice numSide={10}/> */}
 
-      <Heading color="magenta" text="Welcome!" fontSize="20px" />
-      <Heading color="teal" text="Welcome!" fontSize="48px"/>
-
-
-
-      <ColorList colors= {["Red", 'Skyblue', 'Plum', 'Yellow']} />
-
-      <DoubleDice/> 
-      <DoubleDice/> 
+//       <Heading color="magenta" text="Welcome!" fontSize="20px" />
+//       <Heading color="teal" text="Welcome!" fontSize="48px"/>
 
 
 
-        {/* LISTPICKER FILE */}
-          {/* <ListPicker values={[1,2,3,4]}/> */}
-          {/* STRING EXAMPLE */}
-          {/* <ListPicker values={['A','B','C','D','E','F']}/>   */}
+//       <ColorList colors= {["Red", 'Skyblue', 'Plum', 'Yellow']} />
 
-      <div>
-        {/* <RandomPokemon/> */}
-      </div>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-      </div>
+//       <DoubleDice/> 
+//       <DoubleDice/> 
 
-    </>
-)
-}
 
-export default App
+
+//         {/* LISTPICKER FILE */}
+//           {/* <ListPicker values={[1,2,3,4]}/> */}
+//           {/* STRING EXAMPLE */}
+//           {/* <ListPicker values={['A','B','C','D','E','F']}/>   */}
+
+//       <div>
+//         {/* <RandomPokemon/> */}
+//       </div>
+//       <div className="card">
+//         <button onClick={() => setCount((count) => count + 1)}>
+//           count is {count}
+//         </button>
+//       </div>
+
+//     </>
+// )
+// }
+
+// export default App
 
 
 //         {/* FOR SLOTS FILE  */}
