@@ -1,34 +1,38 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+// import { useState } from 'react'
+// import reactLogo from './assets/react.svg'
+// import viteLogo from '/vite.svg'
+// import './App.css'
 
-        {/* FOR MOTIVATION FILE  */}
-import SelfMotivation from './SelfMotivation'
-import './SelfMotivation.css'
+//         {/* FOR MOTIVATION FILE  */}
+// import SelfMotivation from './SelfMotivation'
+// import './SelfMotivation.css'
 
-        {/* FOR GREETER FILE  */}
-import Greeter from './Greeter'
+//         {/* FOR GREETER FILE  */}
+// import Greeter from './Greeter'
 
-import RandomPokemon from './RandomPokemon'
+// import RandomPokemon from './RandomPokemon'
 
-        {/* FOR DICE ROLL FILE  */}
-import Dice from './Dice'
+//         {/* FOR DICE ROLL FILE  */}
+// import Dice from './Dice'
 
-        {/* FOR LISTPICKER FILE  */}
-import ListPicker from './ListPicker'
+//         {/* FOR LISTPICKER FILE  */}
+// import ListPicker from './ListPicker'
 
-        {/* FOR DOUBLEDICE FILE  */}
-import DoubleDice from './DoubleDice'
+//         {/* FOR DOUBLEDICE FILE  */}
+// import DoubleDice from './DoubleDice'
 
-        {/* FOR HEADI FILE  */}
-import Heading from './Heading'
+//         {/* FOR HEADI FILE  */}
+// import Heading from './Heading'
 
-        {/* FOR COLORLIST FILE  */}
-import ColorList from './ColorList'
+//         {/* FOR COLORLIST FILE  */}
+// import ColorList from './ColorList'
+
+//         {/* FOR ShoppingList FILE  */}
+// import ShoppingList from './ShoppingList'
 
 
-// ======================= CODE FOR APP.JSX =======================
+
+// // ======================= CODE FOR APP.JSX =======================
 
 
 function App() {
@@ -37,7 +41,9 @@ function App() {
   return (
     <>
 
-        {/* <SelfMotivation/> */}
+        <ShoppingList items={data}/>
+
+        {/* <SelfMotivation/>    */}
 
         {/* FOR PROPS  */}
         {/* GREETER FILE */}
@@ -88,15 +94,63 @@ export default App
 
 //         {/* FOR SLOTS FILE  */}
 // import Slots from "./Slots"
-// import "./App.css"
+import "./App.css"
 
-// function App(){
-//   return (
+//         {/* FOR ShoppingList FILE  */}
+// import ShoppingList from './ShoppingList'
+// import ShoppingListItem from "./ShoppingListItem"
+
+//         {/* FOR PropertyList FILE  */}
+import PropertyList from "./PropertyList"
+
+//         {/* FOR Clicker FILE  */}
+import Clicker from "./Clicker"
+
+//         {/* FOR Form FILE*/}
+import Form from "./Form"
+
+//  ======================= CODE FOR SHOPPING LIST =======================
+// const data = [
+//         {item:"Bread", quantity:2, completed:false},
+//         {item:"Milk", quantity:1, completed:true},
+//         {item:"Tomato", quantity:9, completed:false},
+//         {item:"Oats Powder", quantity:4, completed:true},
+// ]
+
+
+//  ======================= CODE FOR PROPERTY LIST EXERSICE =======================
+const properties = [
+        {id:129042, name:"Gold Miner Campground", rating: 4.7, price:170},
+        {id:129240, name:"Redwood Treehouse Escape", rating: 4.2, price:150},
+        {id:129245, name:"Oceanview Condo", rating: 4.5, price:250},
+        {id:129144, name:"Lone Mountain Cabin", rating: 4.4, price:220},
+        {id:129149, name:"Cactus Retreat", rating: 4.1, price:190},
+]
+
+
+function App(){
+  return (
+
+        // <ShoppingList item={data}/>
+
+        // ============================== //
+        <div>
+                {/* <PropertyList properties={properties} /> */}
+                {/* <Clicker /> */}
+                <Clicker message="Hii!!" buttonText="Please Click Me" />
+                <Clicker message="YES YOU ARE RIGHT" buttonText="This WORKS"/>
+                <Clicker message="Please Stop Clicking Me!!" buttonText="Do NOT Click" />
+                {/* <Form /> */}
+        </div>
+        // ============================== //
+
 //     <div>  
 //     <Slots val1 = "🧠" val2="🧠" val3="🧠"/>
 //     <Slots val1 = "🧠" val2="🔥" val3="🧠"/>
 //     </div>
-//   )
-// }
+  )
+}
 
-// export default App
+
+
+export default App
