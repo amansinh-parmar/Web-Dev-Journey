@@ -1,0 +1,9 @@
+.ColorBoxGrid {
+    width: 700px;
+    height: 700px;
+    border: 2px solid black;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    box-sizing: border-box;
+}

@@ -92,6 +92,8 @@
 // export default App
 
 
+//  ======================= CODE FOR NEW APP.JSX =======================
+
 //         {/* FOR SLOTS FILE  */}
 // import Slots from "./Slots"
 import "./App.css"
@@ -108,6 +110,16 @@ import Clicker from "./Clicker"
 
 //         {/* FOR Form FILE*/}
 import Form from "./Form"
+
+//         {/* FOR Counter FILE*/}
+import Counter from "./Counter"
+import Toggler from "./Toggler"
+import TogglerCounter from "./ToggleCounter"
+
+
+//         {/* FOR COLORBOX EXERCISE FILE*/}
+import ColorBox from "./ColorBox"
+import ColorBoxGrid from "./ColorBoxGrid"
 
 //  ======================= CODE FOR SHOPPING LIST =======================
 // const data = [
@@ -128,20 +140,53 @@ const properties = [
 ]
 
 
+//  ======================= CODE FOR COLOR BOX EXERSICE =======================
+const colors = [
+        "#E53925",
+        "#E91E63",
+        "#9C27B0",
+        "#67BAB7",
+        "#3F51B5",
+        "#2196F3",
+        "#03A9F4",
+        "#00BCD4",
+        "#009688",
+        "#4CAF50",
+        "#8BC34A",
+        "#CDDC39",
+        "#FFEB3B",
+        "#FFC107",
+        "#FF9800",
+        "#FF5722"
+]
+
 function App(){
   return (
 
         // <ShoppingList item={data}/>
 
         // ============================== //
+        // <div>
+        //         {/* <PropertyList properties={properties} /> */}
+        //         {/* <Clicker /> */}
+        //         {/* <Clicker message="Hii!!" buttonText="Please Click Me" /> */}
+        //         {/* <Clicker message="YES YOU ARE RIGHT" buttonText="This WORKS"/> */}
+        //         {/* <Clicker message="Please Stop Clicking Me!!" buttonText="Do NOT Click" /> */}
+        //         {/* <Form /> */}
+
+        //         {/* <Counter/> */}
+        //         {/* <Toggler/> */}
+        //         {/* <TogglerCounter/> */}
+        // {/* // </div> */}
+        // ============================== //
+
         <div>
-                {/* <PropertyList properties={properties} /> */}
-                {/* <Clicker /> */}
-                <Clicker message="Hii!!" buttonText="Please Click Me" />
-                <Clicker message="YES YOU ARE RIGHT" buttonText="This WORKS"/>
-                <Clicker message="Please Stop Clicking Me!!" buttonText="Do NOT Click" />
-                {/* <Form /> */}
+                {/* <ColorBox colors={colors}/> */}
+                {/* <ColorBoxGrid colors={colors}/> */}
+                <ColorBoxGrid colors={colors} />
         </div>
+
+
         // ============================== //
 
 //     <div>  
