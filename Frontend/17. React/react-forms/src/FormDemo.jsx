@@ -1,11 +1,11 @@
 import {useForm} from 'react-hook-form'
 
-function FormDemo(){
+export default function FormDemo(){
     const {
         register,
-        handleSumbit,
+        handleSubmit,
         formState: { errors },
-    } = useForm({ mode: "onChnage" })
+    } = useForm()
 
     const handleRegistration = (formData) => {
         console.log("FORM SUBMITTED")
@@ -38,21 +38,21 @@ function FormDemo(){
     }
 
     return (
-        <form onSubmit={handleSumbit(handleRegistration, handleError)}>
+        <form onSubmit = { handleSubmit (handleRegistration, 
+            handleError) } >
             <div>
                 <label>Name</label>
                 <input 
-                    type="text" 
                     name="name" 
+                    type="text" 
                     id="name"
                     {...register("name", registerOptions.name)}
                      />
-
                 <small className="text-danger">
                     {errors?.name && errors.name.message}
                 </small>
             </div>
-
+ 
             <div>
                 <label>Email</label>
                 <input 
@@ -97,5 +97,3 @@ function FormDemo(){
         </form>
     )
 } 
-
-export default FormDemo;
