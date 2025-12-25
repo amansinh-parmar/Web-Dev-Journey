@@ -16,7 +16,7 @@ export default function FormDemo(){
     }
 
     return (
-        <Box sx = {{ border: "1px solid red", p : 2, width: 300, height: 300, margin: "0 auto", textAlign:"center"}}>
+        <Box sx = {{ border: "1px solid grey", p : 2, width: 300, height: 300, margin: "3rem auto", textAlign:"center"}}>
         <div style={{textAlign:"center"}}>
             <h2>Car name is {name}</h2>
             <TextField 
