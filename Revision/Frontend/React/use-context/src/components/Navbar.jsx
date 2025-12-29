@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import Button from "./Button";
 
 function Navbar() {
   return (
@@ -13,10 +14,15 @@ function Navbar() {
       <li>
         <NavLink to="/contact">Contact</NavLink>
       </li>
+      <li>
+        <NavLink to="/login">Login</NavLink>
+      </li>
 
-      <NavLink to="/button">
+      {/* <NavLink to="/button">
         <button>CLICK HERE & GET THERE</button>
-      </NavLink>
+      </NavLink> */}
+
+      <Button/>
     </>
   );
 }
