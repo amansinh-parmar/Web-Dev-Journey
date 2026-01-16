@@ -1,11 +1,11 @@
-import React from "react";
+import ContactClient from "./ContactClient";
+
+export const metadata = {
+  title: "Contact Facebook",
+  description:
+    "This is facebook contact and we can connect with the world using Facebook",
+};
 
 export default function Page() {
-  return (
-    <>
-      <div className="flex items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-        THIS IS CONTACT PAGE
-      </div>
-    </>
-  );
+  return <ContactClient />;
 }
