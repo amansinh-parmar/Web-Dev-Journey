@@ -1,163 +1,241 @@
-import { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
+import { ToastContainer, toast, Bounce } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { v4 as uuidv4 } from "uuid";
 
 const Manager = () => {
-  const ref = useRef();
-  const passwordRef = useRef();
-  const [form, setForm] = useState({ site: "", username: "", password: "" });
-  const [passwordArray, setPasswordArray] = useState([]);
+  const passwordRef = useRef(null);
 
+  const [form, setForm] = useState({
+    site: "",
+    username: "",
+    password: "",
+  });
+
+  const [passwordArray, setPasswordArray] = useState([]);
+  const [showPass, setShowPass] = useState(false);
+
+  /* =============== Load passwords on mount =============== */
   useEffect(() => {
     const passwords = localStorage.getItem("passwords");
-    // const passwordArray;
     if (passwords) {
       setPasswordArray(JSON.parse(passwords));
     }
-    // else {
-    //   passwordArray = [];
-    // }
   }, []);
 
-  const [showPass, setShowPass] = useState(false);
+  /* =============== Save Password (FIXED) =============== */
+  const savePassword = () => {
+    if (
+      form.site.length > 3 &&
+      form.username.length > 3 &&
+      form.password.length > 3
+    ) {
+      const newPassword = { ...form, id: uuidv4() };
 
-  // Show Password
-  const showPassword = () => {
-    passwordRef.current.type = "text";
-    if (ref.current.src.includes("icons/eye-cross.svg")) {
-      ref.current.src = "icons/eye.svg";
-      ref.current.type = "password";
+      const updatedPasswords = [...passwordArray, newPassword];
+
+      setPasswordArray(updatedPasswords);
+      localStorage.setItem("passwords", JSON.stringify(updatedPasswords));
+
+      setForm({ site: "", username: "", password: "" });
+
+      toast.success("Saved successfully!");
     } else {
-      ref.current.src = "icons/eye-cross.svg";
-      ref.current.type = "text";
+      toast.error("All fields must be at least 4 characters!");
     }
   };
 
-  // Save Password
-  const savePassword = () => {
-    const updatePasswords = [...passwordArray, form];
-    setPasswordArray([...passwordArray, form]);
-
-    // Use same key everywhere
-    localStorage.setItem("password", JSON.stringify(updatePasswords));
-    console.log(updatePasswords);
+  /* ============== Delete Password ============== */
+  const deletePassword = (id) => {
+    if (confirm("Do you really want to delete this?")) {
+      const updatedPasswords = passwordArray.filter((item) => item.id !== id);
+      setPasswordArray(updatedPasswords);
+      localStorage.setItem("passwords", JSON.stringify(updatedPasswords));
+      toast.success("Deleted successfully!");
+    }
   };
 
-  // Handle Input Change
+  /* =============== Edit Password (FIXED) =============== */
+  const editPassword = (id) => {
+    const passwordToEdit = passwordArray.find((item) => item.id === id);
+    setForm(passwordToEdit);
+
+    const updatedPasswords = passwordArray.filter((item) => item.id !== id);
+    setPasswordArray(updatedPasswords);
+  };
+
+  /* =============== Handle Input Change =============== */
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  /* ============== Copy to Clipboard ============== */
+  const copyText = (text) => {
+    navigator.clipboard.writeText(text);
+    toast("Copied to clipboard!");
+  };
+
   return (
     <>
-      <div className="absolute inset-0 -z-10 h-full w-full bg-green-50 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]">
-        <div className="absolute left-0 right-0 top-0 -z-10 m-auto h-[310px] w-[310px] rounded-full bg-green-400 opacity-20 blur-[100px]"></div>
-      </div>
+      <ToastContainer transition={Bounce} theme="dark" />
 
-      {/* Container */}
-      <div className=" mycontainer">
+      {/* Background */}
+      <div className="absolute inset-0 -z-10 bg-green-50 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]" />
+
+      {/* Main Container */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 min-h-screen">
         {/* Title */}
-        <h1 className="text-2xl font-bold text text-center mb-4">
+        <h1 className="text-3xl md:text-5xl font-bold text-center mt-10 mb-4">
           <span className="text-green-400">&lt;</span>
           Password
           <span className="text-green-500">Manager/&gt;</span>
         </h1>
-        <p className="text-green-500 text-lg text-center font-semibold">
+
+        <p className="text-green-600 text-lg md:text-2xl text-center font-semibold">
           Your Own Password Manager
         </p>
 
-        {/* Enter Website URL */}
-        <div className="text-black flex flex-col items-center p-4 gap-8">
+        {/* Form */}
+        <div className="flex flex-col gap-6 mt-10">
           <input
             value={form.site}
             onChange={handleChange}
-            className="rounded-full border border-green-500 w-full p-4 py-1"
+            className="rounded-full border border-green-500 px-4 py-2 w-full"
             placeholder="Enter website URL"
-            type="text"
             name="site"
           />
 
-          <div className="flex w-full gap-9">
-            {/* Enter Username */}
+          <div className="flex flex-col md:flex-row gap-4">
             <input
               value={form.username}
               onChange={handleChange}
-              className="rounded-full border border-green-500 w-full p-4 py-1"
+              className="rounded-full border border-green-500 px-4 py-2 w-full"
               placeholder="Enter username"
-              type="text"
               name="username"
             />
 
-            {/* Enter Password */}
+            {/* Password Input */}
             <div className="relative w-full">
               <input
                 ref={passwordRef}
                 value={form.password}
                 onChange={handleChange}
+                type={showPass ? "text" : "password"}
+                className="rounded-full border border-green-500 px-4 py-2 w-full"
                 placeholder="Enter password"
-                type={showPass ? "text" : "password"} // toggle type based on state
                 name="password"
-                className="rounded-full border border-green-500 w-full p-4 py-1"
               />
-              <span
-                className="absolute right-[4px] top-[5px] cursor-pointer"
-                onClick={() => setShowPass(!showPass)} // toggle state
+              <button
+                type="button"
+                onClick={() => setShowPass(!showPass)}
+                className="absolute right-3 top-2.5"
               >
                 <img
-                  ref={ref}
-                  src={showPass ? "icons/eye.svg" : "icons/eye-cross.svg"} // icon changes
-                  className="p-1"
-                  width={25}
-                  alt="Toggle Password Visibility"
+                  src={showPass ? "icons/eye.svg" : "icons/eye-cross.svg"}
+                  width={22}
+                  alt="toggle password"
                 />
-              </span>
+              </button>
             </div>
           </div>
 
-          {/* Add Password Button */}
           <button
             onClick={savePassword}
-            className="flex justify-center items-center bg-green-500 rounded-full px-5 py-3 w-fit hover:bg-green-400 border-2 border-green-700"
+            className="bg-green-500 hover:bg-green-400 text-white rounded-full px-6 py-3 self-center"
           >
-            <lord-icon
-              src="https://cdn.lordicon.com/efxgwrkc.json"
-              trigger="hover"
-              style={{ width: "25px", height: "25px" }}
-            ></lord-icon>
-            <span className="ml-2">Add Password</span>
+            Save Password
           </button>
         </div>
-        <div className="password">
-          <h2 className="font-bold text-2xl py-4">Your Passwords</h2>
-          {passwordArray.length === 0 && <div>No Password to show</div>}
-          {passwordArray.length !== 0 && (
-            <table className="table-auto w-full rounded-md overflow-hidden">
+
+        {/* Password List */}
+        <div className="mt-14">
+          <h2 className="font-bold text-xl mb-4">Your Passwords</h2>
+
+          {passwordArray.length === 0 && (
+            <p className="text-gray-500">No passwords saved</p>
+          )}
+
+          {/* RESPONSIVE - Mobile-friendly table */}
+          <div className="overflow-x-auto">
+            <table className="min-w-[600px] w-full rounded-md overflow-hidden">
               <thead className="bg-green-700 text-white">
                 <tr>
                   <th className="py-2">Website</th>
                   <th className="py-2">Username</th>
                   <th className="py-2">Password</th>
+                  <th className="py-2">Action</th>
                 </tr>
               </thead>
               <tbody className="bg-green-100">
-                {passwordArray.map((item, index) => {
-                  return (
-                    <tr key={index}>
-                      <td className="py-2 border border-white text-center w-32">
+                {passwordArray.map((item) => (
+                  <tr key={item.id} className="text-center">
+                    {/* Table URL */}
+                    <td className="border py-2">
+                      <div
+                        className="flex justify-center items-center gap-4"
+                        onClick={() => copyText(item.site)}
+                      >
                         <a href={item.site} target="_blank">
                           {item.site}
                         </a>
-                      </td>
-                      <td className="py-2 border border-white text-center w-32">
-                        {item.username}
-                      </td>
-                      <td className="py-2 border border-white text-center w-32">
-                        {item.password}
-                      </td>
-                    </tr>
-                  );
-                })}
+                        <img
+                          src="icons/copy.svg"
+                          width={20}
+                          className="cursor-pointer"
+                          alt=""
+                        />
+                      </div>
+                    </td>
+
+                    {/* Table Username */}
+                    <td className="border py-2">
+                      <div
+                        className="flex justify-center items-center gap-4"
+                        onClick={() => copyText(item.username)}
+                      >
+                        <span>{item.username}</span>
+                        <img
+                          src="icons/copy.svg"
+                          width={20}
+                          className="cursor-pointer"
+                          alt=""
+                        />
+                      </div>
+                    </td>
+
+                    {/* Table Password */}
+                    <td className="border py-2">
+                      <div
+                        className="flex justify-center items-center gap-4"
+                        onClick={() => copyText(item.password)}
+                      >
+                        <span>{item.password}</span>
+                        <img
+                          src="icons/copy.svg"
+                          width={20}
+                          className="cursor-pointer"
+                          alt=""
+                        />
+                      </div>
+                    </td>
+
+                    {/* Table Action For Passwords */}
+                    <td className="border py-2 flex justify-center items-center gap-4">
+                      <button
+                        onClick={() => editPassword(item.id)}
+                        className="mr-2"
+                      >
+                        ✏️
+                      </button>
+                      <button onClick={() => deletePassword(item.id)}>
+                        🗑️
+                      </button>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
-          )}
+          </div>
         </div>
       </div>
     </>

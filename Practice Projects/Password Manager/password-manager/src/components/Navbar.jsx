@@ -1,39 +1,35 @@
 const Navbar = () => {
   return (
     <>
-      <nav className="bg-purple-500 text-white">
-        <div className="mycontainer flex justify-around items-center px-4 h-14 py-5">
-          <div className="logo font-bold text-3xl">
+      {/* Sticky navbar for better UX */}
+      <nav className="bg-purple-500 text-white w-full sticky top-0 z-50">
+        {/* Max-width container + responsive padding */}
+        <div className="max-w-6xl mx-auto flex items-center justify-between px-4 sm:px-6 h-16">
+          
+          {/* Logo - responsive text size */}
+          <div className="logo font-bold text-xl sm:text-2xl md:text-3xl">
             <span className="text-green-400">&lt;</span>
             Password
             <span className="text-green-400">Manager/&gt;</span>
           </div>
 
-          {/* <ul>
-            <li className="flex gap-9 text-xl">
-              <a href="/" className="hover:font-bold">
-                Home
-              </a>
-              <a href="/about" className="hover:font-bold">
-                About
-              </a>
-              <a href="/" className="hover:font-bold">
-                Contact
-              </a>
-            </li>
-          </ul>
-           */}
-
-          <button className="flex justify-around items-center bg-green-500 px-2 py-1 my-5 rounded-full">
+          {/* GitHub Button */}
+          <a
+            href="https://github.com/amansinh-parmar/Web-Dev-Journey/tree/main/Practice%20Projects/Password%20Manager"
+            target="_blank"
+            rel="noreferrer"
+            className="flex items-center gap-2 bg-green-500 hover:bg-green-400 transition px-3 py-1.5 rounded-full ring-1 ring-white"
+          >
             <img
               src="/icons/github.svg"
-              alt="github icon"
-              className="w-7 h-7 invert cursor-pointer"
+              alt="GitHub"
+              className="w-5 h-5 invert"
             />
-            <span className="font-bold px-2">
-              <a href="https://github.com/" target="_blank">GitHub</a>
+            {/* Hide text on very small screens */}
+            <span className="hidden sm:block font-semibold">
+              GitHub
             </span>
-          </button>
+          </a>
         </div>
       </nav>
     </>
@@ -41,3 +37,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+  
