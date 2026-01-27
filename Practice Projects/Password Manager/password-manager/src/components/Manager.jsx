@@ -1,7 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import { ToastContainer, toast, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { v4 as uuidv4 } from "uuid";
 
 const Manager = () => {
   const passwordRef = useRef(null);
@@ -10,6 +9,7 @@ const Manager = () => {
     site: "",
     username: "",
     password: "",
+    _id: null, // Keep track of MongoDB _id for edits
   });
 
   const [passwordArray, setPasswordArray] = useState([]);
@@ -17,51 +17,87 @@ const Manager = () => {
 
   /* =============== Load passwords on mount =============== */
   useEffect(() => {
-    const passwords = localStorage.getItem("passwords");
-    if (passwords) {
-      setPasswordArray(JSON.parse(passwords));
-    }
+    getPasswords(); // Load passwords from server
   }, []);
 
-  /* =============== Save Password (FIXED) =============== */
-  const savePassword = () => {
+  /* =============== Get Passwords from server =============== */
+  const getPasswords = async () => {
+    try {
+      const res = await fetch("http://localhost:3000/");
+      const passwords = await res.json();
+      // Map MongoDB _id to id for frontend rendering
+      const mappedPasswords = passwords.map((p) => ({ ...p, id: p._id }));
+      setPasswordArray(mappedPasswords);
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to load passwords!");
+    }
+  };
+
+  /* =============== Save Password =============== */
+  const savePassword = async () => {
     if (
-      form.site.length > 3 &&
-      form.username.length > 3 &&
-      form.password.length > 3
+      form.site.length < 4 ||
+      form.username.length < 4 ||
+      form.password.length < 4
     ) {
-      const newPassword = { ...form, id: uuidv4() };
-
-      const updatedPasswords = [...passwordArray, newPassword];
-
-      setPasswordArray(updatedPasswords);
-      localStorage.setItem("passwords", JSON.stringify(updatedPasswords));
-
-      setForm({ site: "", username: "", password: "" });
-
-      toast.success("Saved successfully!");
-    } else {
       toast.error("All fields must be at least 4 characters!");
+      return;
+    }
+
+    try {
+      if (form._id) {
+        // EDIT existing password
+        await fetch(`http://localhost:3000/update/${form._id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            site: form.site,
+            username: form.username,
+            password: form.password,
+          }),
+        });
+        toast.success("Updated successfully!");
+      } else {
+        // ADD new password
+        await fetch("http://localhost:3000/add", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            site: form.site,
+            username: form.username,
+            password: form.password,
+          }),
+        });
+        toast.success("Saved successfully!");
+      }
+
+      setForm({ site: "", username: "", password: "", _id: null }); // Reset form
+      getPasswords(); // Reload list
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to save password!");
     }
   };
 
   /* ============== Delete Password ============== */
-  const deletePassword = (id) => {
+  const deletePassword = async (id) => {
     if (confirm("Do you really want to delete this?")) {
-      const updatedPasswords = passwordArray.filter((item) => item.id !== id);
-      setPasswordArray(updatedPasswords);
-      localStorage.setItem("passwords", JSON.stringify(updatedPasswords));
-      toast.success("Deleted successfully!");
+      try {
+        await fetch(`http://localhost:3000/delete/${id}`, { method: "DELETE" });
+        toast.success("Deleted successfully!");
+        getPasswords(); // Reload list
+      } catch (err) {
+        console.error(err);
+        toast.error("Failed to delete password!");
+      }
     }
   };
 
-  /* =============== Edit Password (FIXED) =============== */
+  /* =============== Edit Password =============== */
   const editPassword = (id) => {
     const passwordToEdit = passwordArray.find((item) => item.id === id);
-    setForm(passwordToEdit);
-
-    const updatedPasswords = passwordArray.filter((item) => item.id !== id);
-    setPasswordArray(updatedPasswords);
+    setForm(passwordToEdit); // Prefill form
   };
 
   /* =============== Handle Input Change =============== */
@@ -141,9 +177,14 @@ const Manager = () => {
 
           <button
             onClick={savePassword}
-            className="bg-green-500 hover:bg-green-400 text-white rounded-full px-6 py-3 self-center"
+            className="bg-green-500 hover:bg-green-400 text-white font-bold text-lg rounded-full px-6 py-3 self-center flex items-center gap-2"
           >
-            Save Password
+            <lord-icon
+              src="https://cdn.lordicon.com/efxgwrkc.json"
+              trigger="hover"
+              style={{ width: "25px", height: "25px" }}
+            ></lord-icon>
+            {form._id ? "Update Password" : "Save Password"}
           </button>
         </div>
 
@@ -169,7 +210,6 @@ const Manager = () => {
               <tbody className="bg-green-100">
                 {passwordArray.map((item) => (
                   <tr key={item.id} className="text-center">
-                    {/* Table URL */}
                     <td className="border py-2">
                       <div
                         className="flex justify-center items-center gap-4"
@@ -187,7 +227,6 @@ const Manager = () => {
                       </div>
                     </td>
 
-                    {/* Table Username */}
                     <td className="border py-2">
                       <div
                         className="flex justify-center items-center gap-4"
@@ -203,13 +242,12 @@ const Manager = () => {
                       </div>
                     </td>
 
-                    {/* Table Password */}
                     <td className="border py-2">
                       <div
                         className="flex justify-center items-center gap-4"
                         onClick={() => copyText(item.password)}
                       >
-                        <span>{item.password}</span>
+                        <span>{"*".repeat(item.password.length)}</span>
                         <img
                           src="icons/copy.svg"
                           width={20}
@@ -219,7 +257,6 @@ const Manager = () => {
                       </div>
                     </td>
 
-                    {/* Table Action For Passwords */}
                     <td className="border py-2 flex justify-center items-center gap-4">
                       <button
                         onClick={() => editPassword(item.id)}
