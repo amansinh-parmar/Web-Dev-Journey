@@ -2,6 +2,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import SessionWrapper from "@/components/SessionWrapper";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -19,10 +20,13 @@ export default function RootLayout({ children }) {
       <body
         className={`${inter.variable} antialiased min-h-screen flex flex-col bg-slate-950 text-white`}
       >
-        <Navbar />
-        <main className="flex-grow w-full">{children}</main>
-        
-        <Footer />
+        <SessionWrapper>
+          <Navbar />
+          <main className="min-h-[87vh] bg-[#000000] bg-[radial-gradient (#ffffff33_1px, #00091d_1px)] bg-[size:20px_20px]">
+            {children}
+          </main>
+          <Footer />
+        </SessionWrapper>
       </body>
     </html>
   );
