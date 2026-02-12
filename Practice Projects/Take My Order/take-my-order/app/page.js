@@ -5,14 +5,14 @@ import Link from "next/link";
 
 export default function Home() {
   const { data: session } = useSession();
-  if (session) {
-    return (
-      <>
-        Signed in as {session.user.email} <br />
-        <button onClick={() => signOut()}>Sign out</button>
-      </>
-    );
-  }
+  // if (session) {
+  //   return (
+  //     <>
+  //       Signed in as {session.user.email} <br />
+  //       <button onClick={() => signOut()}>Sign out</button>
+  //     </>
+  //   );
+  // }
   return (
     <>
       <div className="min-h-screen w-full bg-[#000000] bg-[radial-gradient(#ffffff33_1px,#00091d_1px)] bg-[size:20px_20px] text-white">

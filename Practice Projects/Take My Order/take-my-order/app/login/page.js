@@ -1,8 +1,24 @@
 "use client";
 import React from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function Login() {
+ const { data: session } = useSession();
+   const router = useRouter(); // Must be outside condition
+
+  useEffect(() => {
+    if (session) {
+      router.push("/dashboard");  // Redirect after login
+    }
+  }, [session, router]);
+
+   if (session) {
+    const router = useRouter();
+    router.push('/dashboard')
+  }
+
   return (
     <>
       <div className="min-h-screen w-full bg-[#000000] bg-[radial-gradient(#ffffff33_1px,#00091d_1px)] bg-[size:20px_20px] text-white">
@@ -165,7 +181,7 @@ export default function Login() {
 
               <button
                 onClick={() => {
-                  signIn("github");
+                  signIn("github", {callbackUrl:"/"});
                 }}
                 className="flex items-center cursor-pointer w-64 text-black bg-white  border border-gray-300 rounded-lg shadow-md max-w-xs px-6 py-2 text-sm font-medium text-gray-900 hover:bg-gray-200  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
               >

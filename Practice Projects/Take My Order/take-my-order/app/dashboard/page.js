@@ -1,7 +1,8 @@
-import React from 'react'
+import Dashboard from '@/components/Dashboard'
+import { fetchuser, updateProfile } from "../../actions/useractions";
 
-export const page = () => {
-  return (
-    <div>page</div>
-  )
+const DashboardPage = () => {
+    return <Dashboard/>
 }
+
+export default DashboardPage

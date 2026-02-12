@@ -1,2 +1,7 @@
 /* Tailwind v4 uses a single import */
 @import "tailwindcss";
+
+
+.invertImg{
+    filter: invert(0.23);
+}
