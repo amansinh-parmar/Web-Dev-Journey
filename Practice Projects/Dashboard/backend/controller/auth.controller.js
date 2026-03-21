@@ -1,6 +1,7 @@
 import User from "../models/user.model.js";
 import bcryptjs from "bcryptjs";
 import { errorHandler } from "../utils/error.js";
+import jwt from "jsonwebtoken";
 
 export const signup = async (req, res, next) => {
   const { name, email, password, profileImageUrl, adminJoinCode } = req.body;
@@ -13,14 +14,14 @@ export const signup = async (req, res, next) => {
     email === "" ||
     password === " "
   ) {
-    return next(errorHandler(400, "Sorry, All fields are must required..!!"))
+    return next(errorHandler(400, "Sorry, All fields are must required..!!"));
   }
 
   // Check the user if does it already exists or not
   const isAlreadyExist = await User.findOne({ email });
 
   if (isAlreadyExist) {
-    return next(errorHandler(400, "User already exists"))
+    return next(errorHandler(400, "User already exists"));
   }
 
   //   Check user role
@@ -37,14 +38,45 @@ export const signup = async (req, res, next) => {
     email,
     password: hashPassword,
     profileImageUrl,
-    role
+    role,
   });
 
-  try{
-    await newUser.save()
+  try {
+    await newUser.save();
 
-    res.json('Signup Successful')
-  } catch(error){
-    next(error)
+    res.json("Signup Successful");
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const signin = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password || !email === "" || !password === "") {
+      return next(errorHandler(400, "All fields are required..!!z"));
+    }
+
+    const validUser = await User.findOne({ email });
+
+    if (!validUser) {
+      return next(errorHandler(404, "User not found!!"));
+    }
+
+    // Compare Password
+    const validPassword = bcryptjs.compareSync(password, validUser.password);
+
+    if (!validPassword) {
+      return errorHandler(100, "Wrong Credentials!!");
+    }
+
+    const token = jwt.sign({ id: validUser._id }, process.env.JWT_SECRET);
+
+    const { password: pass, ...rest } = validUser._doc;
+
+    res.status(200).cookie("access_token", token, {httpOnly: true}).json(rest)
+  } catch (error) {
+    next(error);
   }
 };
