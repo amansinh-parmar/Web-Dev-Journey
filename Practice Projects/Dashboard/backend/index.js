@@ -3,6 +3,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 
+import authRoutes from "./routes/auth.route.js"
+
 dotenv.config();
 
 mongoose
@@ -36,6 +38,8 @@ app.get("/", (req, res) => {
 app.get("/login", (req, res) => {
   res.send("This is your LOGIN PAGE:");
 });
+
+
 
 // Server Connection
 app.listen(3000, () => {
