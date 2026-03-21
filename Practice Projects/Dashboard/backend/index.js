@@ -3,7 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 
-import authRoutes from "./routes/auth.route.js"
+import authRoutes from "./routes/auth.route.js";
 
 dotenv.config();
 
@@ -39,7 +39,21 @@ app.get("/login", (req, res) => {
   res.send("This is your LOGIN PAGE:");
 });
 
+// Middleware for API
+app.use("/api/auth", authRoutes);
 
+// Middleware for Error Handler
+app.use((err, req, res, next) => {
+  const statusCode = err.statusCode || 500;
+
+  const message = err.message || "Internal server error..!!";
+
+  res.status(statusCode).json({
+    success: false,
+    statusCode,
+    message,
+  });
+});
 
 // Server Connection
 app.listen(3000, () => {
